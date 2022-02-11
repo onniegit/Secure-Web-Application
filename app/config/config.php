@@ -13,11 +13,11 @@ try {
     }
 
     //Set up passwords for hashing
-    $passwords = [0 => 'Password1', 1 => 'Password2', 2 => 'Password3', 3 => 'Password4', 4 => 'Password5',
-        5 => 'Password6', 6 => 'Password7', 7 => 'Password8', 8 => 'Password9', 9 => 'Password10', 10 => 'Password11',
-        11 => 'Password12', 12 => 'Password13', 13 => 'Password14', 14 => 'Password15', 15 => 'Password16',
-        16 => 'Password17', 17 => 'Password18', 18 => 'Password19', 19 => 'Password20', 20 => 'Password21',
-        21 => 'Password22', 22 => 'Password23', 23 => 'Password24'
+    $passwords = [0 => 'Password1!', 1 => 'Password2!', 2 => 'Password3!', 3 => 'Password4!', 4 => 'Password5!',
+        5 => 'Password6!', 6 => 'Password7!', 7 => 'Password8!', 8 => 'Password9!', 9 => 'Password10!', 10 => 'Password11!',
+        11 => 'Password12!', 12 => 'Password13!', 13 => 'Password14!', 14 => 'Password15!', 15 => 'Password16!',
+        16 => 'Password17!', 17 => 'Password18!', 18 => 'Password19!', 19 => 'Password20!', 20 => 'Password21!',
+        21 => 'Password22!', 22 => 'Password23!', 23 => 'Password24!'
     ];
 
     //Create variables for hashed passwords

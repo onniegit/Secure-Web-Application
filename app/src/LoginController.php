@@ -3,7 +3,7 @@ try {
     /*Get DB connection*/
     require_once "../src/DBController.php";
 
-
+    
     function DisplayError($errorCode)
     {
         if($errorCode==1)
@@ -12,21 +12,25 @@ try {
         }
     }
 
-    /*checks format of username*/
-    function ValidateUsername($un)
+    //consolidated method to validate username and password
+    //password must be between 8 and 20 characters
+    //and must contain at least one upper case, lower case,
+    //number, and symbol !@#$%^&*()
+    function ValidateInput($un,$pw)
     {
-        $emailFormat = "/[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-zA-z0-9]/";
+        $passwordFormat = "/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()])/";
 
-        return (bool)preg_match($emailFormat,$un);
+        if(filter_var($un,FILTER_VALIDATE_EMAIL)==true AND preg_match($passwordFormat,$pw)==true)
+        {
+            return true;
+        }
+
+        else return false;
     }
 
-    if(ValidateUsername($_POST['username']))
+    if(ValidateInput($_POST['username'],$_POST['password']))
     {
         $myusername = htmlentities($_POST['username']);
-    }
-
-    if(ctype_alnum($_POST['password']))
-    {
         $mypassword = htmlentities($_POST['password']);
     }
 
@@ -110,4 +114,4 @@ catch(Exception $e)
 
     $allVars = get_defined_vars();
     debug_zval_dump($allVars);
-} 
+}
