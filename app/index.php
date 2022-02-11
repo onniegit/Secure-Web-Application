@@ -8,7 +8,7 @@ try {
   } else {
       
     //redirect to login
-    header("Location: public/index.php");
+    header("Location: public/LoginForm.php");
   }
 }
 catch(Exception $e)
