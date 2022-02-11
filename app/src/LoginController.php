@@ -3,15 +3,44 @@ try {
     /*Get DB connection*/
     require_once "../src/DBController.php";
 
-    /*Get information from the post request*/
-    $myusername = $_POST['username'];
-    $mypassword = $_POST['password'];
+
+    function DisplayError($errorCode)
+    {
+        if($errorCode==1)
+        {
+            echo "Username or password is incorrect, please try again.";
+        }
+    }
+
+    /*checks format of username*/
+    function ValidateUsername($un)
+    {
+        $emailFormat = "/[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-zA-z0-9]/";
+
+        return (bool)preg_match($emailFormat,$un);
+    }
+
+    if(ValidateUsername($_POST['username']))
+    {
+        $myusername = $_POST['username'];
+    }
+
+    if(ctype_alnum($_POST['password']))
+    {
+        $mypassword = $_POST['password'];
+    }
+
+    if($mypassword==null||$myusername==null)
+    {
+        $errorCode = 1;
+        DisplayError($errorCode);
+    }
 
     //convert password to 80 byte hash using ripemd256 before comparing
     $hashpassword = hash('ripemd256', $mypassword);
 
-    if($myusername==null)
-    {throw new Exception("input did not exist");}
+    /*if($myusername==null)
+    {throw new Exception("input did not exist");}*/
 
 
     $myusername = strtolower($myusername); //makes username noncase-sensitive
@@ -81,8 +110,4 @@ catch(Exception $e)
 
     $allVars = get_defined_vars();
     debug_zval_dump($allVars);
-}
-
-
-
-
+} 
