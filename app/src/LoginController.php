@@ -94,7 +94,7 @@ try {
         $error = true;
 
         //login fail
-        header("Location: ../public/index.php?login=fail");
+        header("Location: ../public/LoginForm.php?login=fail");
         //note: since the database is not changed, it is not backed up
     }
 
