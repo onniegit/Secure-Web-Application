@@ -56,7 +56,11 @@
                             <td><input type="password" id="confirmpassword" name="confirmpassword" ></td>
                         </tr>
                     </table>
-                    <div style="text-align:center"><input type="submit" value="Submit" ></div>
+                    <div style="text-align:center">
+                        <input type="submit" value="Submit">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" value="Cancel" onclick=" location.href = 'LoginForm.php'">
+                    </div>
                 </form>
             </div>
         </main>

@@ -61,6 +61,8 @@ $secquestion = $db->querySingle($query);
                     <label for="Answer">Answer:&nbsp;&nbsp;</label>
                     <input type="text" id="Answer" name="Answer"><br><br>
                     <input type="submit" value="Submit">
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" value="Cancel" onclick=" location.href = 'LoginForm.php'">
                 </form>
             </div>
         </main>

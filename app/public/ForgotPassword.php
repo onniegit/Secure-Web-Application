@@ -42,7 +42,10 @@
             <form action="../src/ForgotPasswordLogic.php" method="POST">
                 <label for="email">Email:&nbsp;&nbsp;</label>
                 <input type="text" id="email" name="email"> <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="submit" id="submit" value ="Submit">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" value="Cancel" onclick=" location.href = 'LoginForm.php'">
             </form>
         </div>
     </main>
