@@ -40,55 +40,46 @@ try {
         DisplayError($errorCode);
     }
 
-    //convert password to 80 byte hash using ripemd256 before comparing
-    $hashpassword = hash('ripemd256', $mypassword);
-
-    /*if($myusername==null)
-    {throw new Exception("input did not exist");}*/
-
-
-    $myusername = strtolower($myusername); //makes username noncase-sensitive
     global $acctype;
 
+    function ValidateUser($un,$pw)
+    {
+    //convert password to 80 byte hash using ripemd256 before comparing
+     $hashpassword = hash('ripemd256', $pw); 
+ 
+     $myusername = strtolower($un); //makes username noncase-sensitive
 
     //query for count
-    $query = "SELECT COUNT(*) as count FROM User WHERE Email='$myusername' AND (Password='$mypassword' OR Password='$hashpassword')";
-    $count = $db->querySingle($query);
+     $query = "SELECT COUNT(*) as count FROM User WHERE Email='$myusername' AND Password='$hashpassword'";
+     $count = $GLOBALS['db']->querySingle($query);
 
     //query for the row(s)
-    $query = "SELECT * FROM User WHERE Email='$myusername' AND (Password='$mypassword' OR Password='$hashpassword')";
-    $results = $db->query($query);
+     $query = "SELECT * FROM User WHERE Email='$myusername' AND Password='$hashpassword'";
+     $results = $GLOBALS['db']->query($query);
 
-    if ($results !== false) //query failed check
-    {
-        if (($userinfo = $results->fetchArray()) !== (null || false)) //checks if rows exist
-        {
-            // users or user found
-            $error = false;
+     if ($results != false AND ($userinfo = $results->fetchArray()) != (null OR false))
+     {
+        $GLOBALS['acctype'] = $userinfo[2];
+         return true;
+     }
 
-            $acctype = $userinfo[2];
-        } else {
-            // user was not found
-            $error = true;
-
-        }
-    } else {
-        //query failed
-        $error = true;
-
+     else return false;
     }
 
-    //determine if an account that met the credentials was found
-    if ($count >= 1 && !$error) {
-        //login success
+    if (ValidateUser($myusername,$mypassword)) // user found
+    {
+        $error = false;
 
-        if (isset($_SESSION)) {
+        if (isset($_SESSION)) 
+        {
             //a session already existed
             session_destroy();
             session_start();
             $_SESSION['email'] = $myusername;
             $_SESSION['acctype'] = $acctype;
-        } else {
+        } 
+        else 
+        {
             //a session did not exist
             session_start();
             $_SESSION['email'] = $myusername;
@@ -96,22 +87,28 @@ try {
         }
         //redirect
         header("Location: ../public/dashboard.php");
-    } else {
+    }
+
+    else // user not found
+    {
+        $error = true;
+
         //login fail
         header("Location: ../public/index.php?login=fail");
+        //note: since the database is not changed, it is not backed up
     }
-//note: since the database is not changed, it is not backed up
-}
-catch(Exception $e)
-{
-    //prepare page for content
-    include_once "ErrorHeader.php";
 
-    //Display error information
-    echo 'Caught exception: ',  $e->getMessage(), "<br>";
-    var_dump($e->getTraceAsString());
-    echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
-
-    $allVars = get_defined_vars();
-    debug_zval_dump($allVars);
-}
+ }
+ catch(Exception $e)
+ {
+     //prepare page for content
+     include_once "ErrorHeader.php";
+ 
+     //Display error information
+     echo 'Caught exception: ',  $e->getMessage(), "<br>";
+     var_dump($e->getTraceAsString());
+     echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+ 
+     $allVars = get_defined_vars();
+     debug_zval_dump($allVars);
+ }
