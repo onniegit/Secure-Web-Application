@@ -6,7 +6,7 @@ try {
     /*Get information from the search (post) request*/
     $acctype = $_POST['acctype'];
     $password = hash('ripemd256', $_POST['password']); //convert password to 80 byte hash using ripemd256 before saving
-    $fname = $_POST['fname'];
+    $fname = htmlentities($_POST['fname']);
     $lname = $_POST['lname'];
     $dob = $_POST['dob']; //date obtained is already UTC
     $email = strtolower($_POST['email']); //is converted to lower
