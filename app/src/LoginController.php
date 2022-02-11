@@ -22,12 +22,12 @@ try {
 
     if(ValidateUsername($_POST['username']))
     {
-        $myusername = $_POST['username'];
+        $myusername = htmlentities($_POST['username']);
     }
 
     if(ctype_alnum($_POST['password']))
     {
-        $mypassword = $_POST['password'];
+        $mypassword = htmlentities($_POST['password']);
     }
 
     if($mypassword==null||$myusername==null)
