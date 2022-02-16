@@ -1,7 +1,8 @@
 <?php
 try {
+  require_once "src/RedirectController.php";
 
-  if (isset($_SESSION)) 
+  if ($GLOBALS['rc']->ValidateLogin()) 
   {
     //redirect to dashboard
     header("Location: public/dashboard.php");
@@ -13,5 +14,5 @@ try {
 }
 catch(Exception $e)
 {
-    header("Location: ../public/index.php?login=fail");
+    header("Location: public/index.php?login=fail");
 }
