@@ -1,12 +1,11 @@
 <?php
-require "../src/DBConnector.php";
-require "../src/User.php";
+require_once "../src/DBConnector.php";
+require_once "../src/User.php";
 
 global $acctype;
 
 class LoginController
 {
-
     public static function Login($un,$pw)
     {
         if (LoginController::ValidateInput($un,$pw)==true) //Validate Input
@@ -14,7 +13,7 @@ class LoginController
             $uname = htmlspecialchars($un); //to prevent XSS
             $pword = htmlspecialchars($pw);
 
-            $User = DBConnector::GetUser($uname); //GetUser() -> User
+            $User = DBConnector::GetUser($uname,$pword); //GetUser() -> User
 
             if (LoginController::ValidateUser($uname,$User->GetEmail(),$pword,$User->GetPassword()==true))
             {

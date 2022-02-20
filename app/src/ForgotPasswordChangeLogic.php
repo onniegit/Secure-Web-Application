@@ -20,8 +20,17 @@ try {
 
         if ($NewPassword == $NewPasswordConfirm)
         {
-            $query = "UPDATE User SET Password='$HashedNewPass' WHERE Email ='$email' AND '$NewPassword' = '$NewPasswordConfirm'";
-            $results = $db->exec($query);
+            /*$query = "UPDATE User SET Password='$HashedNewPass' WHERE Email ='$email' AND '$NewPassword' = '$NewPasswordConfirm'";
+            $results = $db->exec($query);*/ //this code left in for demo purposes
+
+            //prepared statement to prevent SQL injection
+            $query = "UPDATE User SET Password=:HashedNewPass WHERE Email =:email AND :newPassword = :newPasswordConfirm";
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':HashedNewPass', $HashedNewPass);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':newPassword', $NewPassword);
+            $stmt->bindParam(':newPasswordConfirm', $NewPasswordConfirm);
+            $results = $stmt->execute();
 
             //backup database
             $db->backup($db, "temp", $GLOBALS['dbPath']);
