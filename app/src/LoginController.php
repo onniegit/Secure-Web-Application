@@ -11,18 +11,21 @@ class LoginController
     {
         if (LoginController::ValidateInput($un,$pw)==true) //Validate Input
         {
-            $User = DBConnector::GetUser($un); //GetUser() -> User
+            $uname = htmlspecialchars($un); //to prevent XSS
+            $pword = htmlspecialchars($pw);
 
-            if (LoginController::ValidateUser($un,$User->GetEmail(),$pw,$User->GetPassword()==true))
+            $User = DBConnector::GetUser($uname); //GetUser() -> User
+
+            if (LoginController::ValidateUser($uname,$User->GetEmail(),$pword,$User->GetPassword()==true))
             {
-                $acctype = $User->GetAccType();
+                $acctype = $User->GetAccType(); //determines which dashboard to present
 
                 if (isset($_SESSION))
                 {
                     //a session already existed
                     session_destroy();
                     session_start();
-                    $_SESSION['email'] = $un;
+                    $_SESSION['email'] = $uname;
                     $_SESSION['acctype'] = $acctype;
                 } 
                 
@@ -30,7 +33,7 @@ class LoginController
                 {
                     //a session did not exist
                     session_start();
-                    $_SESSION['email'] = $un;
+                    $_SESSION['email'] = $uname;
                     $_SESSION['acctype'] = $acctype;
                 }
 
@@ -52,7 +55,7 @@ class LoginController
 
     function ValidateInput($un,$pw)
     {
-        $passwordFormat = "/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{8,20}/";
+        $passwordFormat = "/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,20}/"; // whitelist of special chars ! @ # $ % ^ & *
 
         if(filter_var($un,FILTER_VALIDATE_EMAIL)==true AND preg_match($passwordFormat,$pw)==true)
         {

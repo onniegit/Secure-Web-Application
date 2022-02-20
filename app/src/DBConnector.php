@@ -5,13 +5,18 @@ class DBConnector
 {
     function GetUser($un)
     {
-        $query = "SELECT COUNT(*) as count FROM User WHERE Email='$un'";
-        $count = $GLOBALS['db']->querySingle($query);
+        //prevents SQL injection through use of prepared statements
+        $query = "SELECT COUNT(*) as count FROM User WHERE Email=:un";
+        $stmt = $GLOBALS['db']->prepare($query);
+        $stmt->bindParam(':un', $un);
+        $count = $stmt->execute();
 
         if ($count >= 1)
         {
-            $query = "SELECT * FROM User WHERE Email='$un'";
-            $results = $GLOBALS['db']->query($query);
+            $query = "SELECT * FROM User WHERE Email=:un";
+            $stmt = $GLOBALS['db']->prepare($query);
+            $stmt->bindParam(':un', $un);
+            $results = $stmt->execute();
 
             if ($results != false)
             {
