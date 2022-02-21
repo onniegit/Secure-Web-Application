@@ -3,7 +3,7 @@ require_once "../src/DBController.php";
 
 class DBConnector
 {
-    function GetUser($un,$pw)
+    public static function GetUser($un,$pw)
     {
         $hashpassword = hash('ripemd256', $pw);
 

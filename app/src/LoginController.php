@@ -15,7 +15,7 @@ class LoginController
 
             $User = DBConnector::GetUser($uname,$pword); //GetUser() -> User
 
-            if (LoginController::ValidateUser($uname,$User->GetEmail(),$pword,$User->GetPassword()==true))
+            if (LoginController::ValidateUser($uname,$User->GetEmail(),$pword,$User->GetPassword()==true)) //Validate User
             {
                 $acctype = $User->GetAccType(); //determines which dashboard to present
 
@@ -40,13 +40,13 @@ class LoginController
                 header("Location: ../public/dashboard.php");
             }
 
-            else
+            else // invalid user credentials
             {
                 header("Location: ../public/LoginForm.php?login=fail");
             }
         }
 
-        else
+        else // invalid input
         {
             header("Location: ../public/LoginForm.php?login=fail");
         }
@@ -54,8 +54,10 @@ class LoginController
 
     function ValidateInput($un,$pw)
     {
+        // password requirements
         $passwordFormat = "/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,20}/"; // whitelist of special chars ! @ # $ % ^ & *
 
+        // username must be in email format, password must match regex
         if(filter_var($un,FILTER_VALIDATE_EMAIL)==true AND preg_match($passwordFormat,$pw)==true)
         {
             return true;
@@ -64,6 +66,7 @@ class LoginController
         else return false;
     }
 
+    
     function ValidateUser($un,$userUname,$pw,$userPword)
     {
         $inputUname = strtolower($un); //makes username noncase-sensitive
