@@ -11,7 +11,12 @@ try {
     //redirect to login
     header("Location: LoginForm.php");
   }
+ 
 }
+catch(Exception $e)
+{
+    header("Location: LoginForm.php?login=fail");
+}?>
 
 <!DOCTYPE html>
 <html lang="en">
