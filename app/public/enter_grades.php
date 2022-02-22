@@ -3,11 +3,21 @@
 
 session_start(); //required to bring session variables into context
 
-if (!(isset($_SESSION['email']) && $_SESSION['acctype']===2 && !empty($_SESSION['email']))) //check that session exists and is nonempty
+if ((isset($_SESSION['email']) && !empty($_SESSION['email']))) //check that session exists and is nonempty
+{
+    if (!($_SESSION['acctype'] == 2)) //check if user is not faculty
+    {
+        http_response_code(403);
+        die('Forbidden');
+    }
+}
+
+else
 {
     http_response_code(403);
     die('Forbidden');
 }
+
 ?>
 
 <!DOCTYPE html>
