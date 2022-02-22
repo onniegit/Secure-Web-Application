@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta http-equiv="refresh" content="0; url=LoginForm.php">
-  <meta charset="utf-8" />
-  <title>Secure ED.</title>
-</head>
+<?php
+try {
+  require_once "../src/RedirectController.php";
 
-<body>
-  <main>
-  </main>
-</body>
-</html>
+  if ($GLOBALS['rc']->ValidateLogin()) 
+  {
+    //redirect to dashboard
+    header("Location: dashboard.php");
+  } else {
+      
+    //redirect to login
+    header("Location: LoginForm.php");
+  }
+}
+catch(Exception $e)
+{
+    header("Location: LoginForm.php?login=fail");
+}

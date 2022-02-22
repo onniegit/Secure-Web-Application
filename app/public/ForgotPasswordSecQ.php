@@ -1,4 +1,18 @@
 <?php
+try {
+  require_once "../src/RedirectController.php";
+
+  if ($GLOBALS['rc']->ValidateLogin()) 
+  {
+    //redirect to dashboard
+    header("Location: dashboard.php");
+  } else {
+      
+    //redirect to login
+    header("Location: LoginForm.php");
+  }
+}
+
 //This php code gets the selected user's security question from the database
 
 /*Get DB connection*/
