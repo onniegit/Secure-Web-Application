@@ -1,3 +1,19 @@
+<?php
+try {
+  require_once "../src/RedirectController.php";
+
+  if ($GLOBALS['rc']->ValidateLogin()) 
+  {
+    //redirect to dashboard
+    header("Location: dashboard.php");
+  } 
+ 
+}
+catch(Exception $e)
+{
+    header("Location: LoginForm.php?login=fail");
+}?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
