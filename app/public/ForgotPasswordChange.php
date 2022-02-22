@@ -6,10 +6,6 @@ try {
   {
     //redirect to dashboard
     header("Location: dashboard.php");
-  } else {
-      
-    //redirect to login
-    header("Location: LoginForm.php");
   }
  
 }
