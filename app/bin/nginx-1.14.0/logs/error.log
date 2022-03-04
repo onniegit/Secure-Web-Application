@@ -1,0 +1,1 @@
+2022/03/04 06:20:00 [error] 14064#7360: *1 CreateFile() "C:\Users\rghal_000\Downloads\laragon\bin\nginx\nginx-1.14.0/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost", referrer: "http://localhost/"
