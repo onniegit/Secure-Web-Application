@@ -1,8 +1,0 @@
-2022/03/04 19:10:53 [error] 5652#12144: *1 CreateFile() "D:\Users\rghal_000\OneDrive\Documents\GitHub\SecureEd\app\bin\nginx/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost", referrer: "http://localhost/"
-2022/03/04 19:12:39 [notice] 6552#11020: signal process started
-2022/03/04 19:17:35 [notice] 16632#11752: signal process started
-2022/03/04 19:17:49 [error] 17564#20084: *6 CreateFile() "D:\Users\rghal_000\OneDrive\Documents\GitHub\SecureEd\app\bin\nginx/html/ForgotPassword.php" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /ForgotPassword.php HTTP/1.1", host: "localhost", referrer: "http://localhost/"
-2022/03/04 19:25:49 [notice] 3812#16100: signal process started
-2022/03/04 19:26:43 [notice] 5028#16564: signal process started
-2022/03/04 19:27:23 [notice] 18656#14752: signal process started
-2022/03/04 19:34:45 [notice] 19532#15320: signal process started
