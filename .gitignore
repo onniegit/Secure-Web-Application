@@ -1,3 +1,5 @@
 
 app/uploads/readme.txt
 .idea/workspace.xml
+app/bin/nginx/logs/access.log
+app/bin/nginx/logs/error.log
