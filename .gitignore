@@ -2,3 +2,4 @@
 app/uploads/readme.txt
 .idea/workspace.xml
 *.log
+*.pid
