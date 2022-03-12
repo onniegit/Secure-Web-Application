@@ -55,7 +55,7 @@ if (!isset($_SESSION['email']) or (empty($_SESSION['email']))) //check that sess
 
       <?php
 
-      DashboardController::Display($atype);
+    DashboardController::Display();
 
     ?>
   </div>
