@@ -12,7 +12,7 @@ try {
 catch(Exception $e)
 {
     header("Location: LoginForm.php?login=fail");
-}?>
+}
 
 //This php code gets the selected user's security question from the database
 
