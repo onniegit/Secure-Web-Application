@@ -1,4 +1,7 @@
 <?php
+//start the session
+session_start();
+
 try {
   require_once "../src/RedirectController.php";
 
@@ -11,7 +14,8 @@ try {
 catch(Exception $e)
 {
     header("Location: LoginForm.php?login=fail");
-}?>
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">

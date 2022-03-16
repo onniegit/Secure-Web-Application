@@ -1,4 +1,7 @@
 <?php
+// resume the session
+session_start();
+
 try {
   require_once "../src/RedirectController.php";
 
@@ -50,13 +53,15 @@ catch(Exception $e)
                 <?php
                         //check url if the request failed due to passwords not matching
                          $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
                          if("passwordcheck=fail" == parse_url($url, PHP_URL_QUERY))
                          {
-                             echo "<p>The passwords did not match.</p>";
+                             echo "<p>There was a problem. Ensure you fill both boxes, your new password meets the complexity requirement, and both passwords match.</p>";
                          }
+
                          else
                          {
-                             echo "<p>Please enter your new password below.</p>";
+                             echo "<p>Please enter your new password below. It must be between 8 and 20 characters and contain at least one capital letter, one lowercase letter, one number, and one of the following specials symbols: ! @ # $ % ^ & * </p>";
                          }
                 ?>
                 </div>

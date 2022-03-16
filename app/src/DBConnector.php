@@ -1,32 +1,38 @@
 <?php
 require_once "../src/DBController.php";
+require_once "../src/SecurityController.php";
+require_once "../src/User.php";
 
 class DBConnector
+// all database interaction is handled within this class
+// prepared statements are used throughout to prevent SQL injection
 {
-    public static function GetUser($un,$pw)
+    public static function GetUser($un) // returns a User pbject from the database
     {
-        $hashpassword = hash('ripemd256', $pw);
-
-        //prevents SQL injection through use of prepared statements
-        $query = "SELECT COUNT(*) as count FROM User WHERE Email=:un AND Password=:hashpassword";
+        $query = "SELECT * FROM User WHERE Email=:un";
         $stmt = $GLOBALS['db']->prepare($query);
-        $stmt->bindParam(':un', $un);
-        $stmt->bindPAram(':hashpassword', $hashpassword);
-        $count = $stmt->execute();
+        $stmt->bindParam(':un',$un, SQLITE3_TEXT);
+        $result = $stmt->execute();
+        $userinfo = array();
 
-        if ($count >= 1)
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            array_push($userinfo, $row['UserID'], $row['Email'], $row['AccType'], $row['Password'], $row['FName'], $row['LName'], $row['DOB'], 
+            $row['Year'], $row['Rank'], $row['SQuestion'], $row['SAnswer']);
+        }
+
+        if ($userinfo)
         {
-            $query = "SELECT * FROM User WHERE Email=:un AND Password=:hashpassword";
-            $stmt = $GLOBALS['db']->prepare($query);
-            $stmt->bindParam(':un', $un);
-            $stmt->bindPAram(':hashpassword', $hashpassword);
-            $results = $stmt->execute();
-
-            if ($results != false)
-            {
-                $userinfo = $results->fetchArray();
-                $User = new User($userinfo[1],$userinfo[2],$userinfo[3]);
-            }
+            $User = new User();
+            $User->SetEmail($userinfo[1]);
+            $User->SetAccType($userinfo[2]);
+            $User->SetPassword($userinfo[3]);
+            $User->SetFName($userinfo[4]);
+            $User->SetLName($userinfo[5]);
+            $User->SetDOB($userinfo[6]);
+            $User->SetYear($userinfo[7]);
+            $User->SetRank($userinfo[8]);
+            $User->SetSQuestion($userinfo[9]);
+            $User->SetSAnswer($userinfo[10]);
 
             return $User;
         }
@@ -35,5 +41,64 @@ class DBConnector
         {
             header("Location: ../public/LoginForm.php?login=fail");
         }
+    }
+
+    public static function UsernameExists($un) // returns true if provided username exists within the db
+    {
+        $query = "SELECT * FROM User WHERE Email=:un";
+        $stmt = $GLOBALS['db']->prepare($query);
+        $stmt->bindParam(':un',$un, SQLITE3_TEXT);
+        $result = $stmt->execute();
+        $exists = array();
+
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $exists[] = $row;
+        }
+
+        if ($exists)
+        {
+            return true;
+        }
+
+        else return false;
+    }
+
+    public static function TempUser($un) // returns a User object
+    {
+        $query = "SELECT * FROM User WHERE Email=:un";
+        $stmt = $GLOBALS['db']->prepare($query);
+        $stmt->bindParam(':un',$un, SQLITE3_TEXT);
+        $result = $stmt->execute();
+        $userinfo = array();
+
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            array_push($userinfo, $row['UserID'], $row['Email'], $row['AccType'], $row['Password'], $row['FName'], $row['LName'], $row['DOB'], 
+            $row['Year'], $row['Rank'], $row['SQuestion'], $row['SAnswer']);
+        }
+
+        $User = new User();
+        $User->SetEmail($userinfo[1]);
+        $User->SetAccType($userinfo[2]);
+        $User->SetPassword($userinfo[3]);
+        $User->SetFName($userinfo[4]);
+        $User->SetLName($userinfo[5]);
+        $User->SetDOB($userinfo[6]);
+        $User->SetYear($userinfo[7]);
+        $User->SetRank($userinfo[8]);
+        $User->SetSQuestion($userinfo[9]);
+        $User->SetSAnswer($userinfo[10]);
+
+        return $User;
+    }
+
+    public static function UpdatePasswordDB($un, $pw) // updates a user's password, backs up db
+    {
+        $query = "UPDATE User SET Password=:pw WHERE Email =:un";
+        $stmt = $GLOBALS['db']->prepare($query);
+        $stmt->bindParam(':pw', $pw);
+        $stmt->bindParam(':un', $un);
+        $results = $stmt->execute();
+
+        $GLOBALS['db']->backup($db, "temp", $GLOBALS['dbPath']);
     }
 }
