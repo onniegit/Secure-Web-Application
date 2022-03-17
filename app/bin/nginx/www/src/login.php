@@ -1,7 +1,5 @@
 <?php
 try {
-    /*Get DB connection*/
-    require_once "../src/DBController.php";
     require_once "../src/LoginController.php";
 
     LoginController::Login($_POST['username'],$_POST['password']);

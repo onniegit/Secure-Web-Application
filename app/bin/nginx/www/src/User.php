@@ -12,12 +12,24 @@ class User
     private $SQuestion;
     private $SAnswer;
 
-    public function __construct($Email,$AccType,$Password)
+    public function __construct()
+    {
+
+    }
+
+    /*public function __construct($Email,$AccType,$Password,$FName,$LName,$DOB,$Year,$Rank,$SQuestion,$SAnswer)
     {
         $this->Email = $Email;
         $this->AccType = $AccType;
         $this->Password = $Password;
-    }
+        $this->FName = $FName;
+        $this->Lname = $LName;
+        $this->DOB = $DOB;
+        $this->Year = $Year;
+        $this->Rank = $Rank;
+        $this->SQuestion = $SQuestion;
+        $this->SAnswer = $SAnswer;
+    }*/
     
     public function GetEmail()
     {
@@ -66,7 +78,7 @@ class User
 
     public function SetLName($LName)
     {
-        $this->LName = $Lname;
+        $this->LName = $LName;
     }
 
     public function GetDOB()

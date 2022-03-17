@@ -1,6 +1,7 @@
 <?php
 require_once "../src/DBConnector.php";
 require_once "../src/User.php";
+require_once "../src/SecurityController.php";
 
 global $acctype;
 
@@ -10,12 +11,12 @@ class LoginController
     {
         if (LoginController::ValidateInput($un,$pw)==true) //Validate Input
         {
-            $uname = htmlspecialchars($un); //to prevent XSS
-            $pword = htmlspecialchars($pw);
+            $uname = SecurityController::XssValidation($un); //to prevent XSS
+            $pword = SecurityController::XssValidation($pw);
 
-            $User = DBConnector::GetUser($uname,$pword); //GetUser() -> User
+            $User = DBConnector::GetUser($uname); //GetUser() -> User
 
-            if (LoginController::ValidateUser($uname,$User->GetEmail(),$pword,$User->GetPassword()==true)) //Validate User
+            if (LoginController::ValidateUser($uname,$User->GetEmail(),$pw,$User->GetPassword())==true) //Validate User
             {
                 $acctype = $User->GetAccType(); //determines which dashboard to present
 
@@ -41,7 +42,7 @@ class LoginController
             }
 
             else // invalid user credentials
-            {
+            {                
                 header("Location: ../public/LoginForm.php?login=fail");
             }
         }
@@ -52,27 +53,18 @@ class LoginController
         }
     }
 
-    function ValidateInput($un,$pw)
+    function ValidateInput($un,$pw) // validates input for format
     {
-        // password requirements
-        $passwordFormat = "/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,20}/"; // whitelist of special chars ! @ # $ % ^ & *
-
-        // username must be in email format, password must match regex
-        if(filter_var($un,FILTER_VALIDATE_EMAIL)==true AND preg_match($passwordFormat,$pw)==true)
-        {
-            return true;
-        }
+        if(SecurityController::ValidateEmail($un)==true AND SecurityController::ValidatePassword($pw)==true) return true;
 
         else return false;
     }
-
     
-    function ValidateUser($un,$userUname,$pw,$userPword)
+    function ValidateUser($un,$userUname,$pw,$userPword) // verifies correctness of username and password
     {
-        $inputUname = strtolower($un); //makes username noncase-sensitive
         $hashedInputPword = hash('ripemd256', $pw);
 
-        if ($inputUname == $userUname && $hashedInputPword == $userPword)
+        if ($un == $userUname AND $hashedInputPword == $userPword)
         {
             return true;
         }

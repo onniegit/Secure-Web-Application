@@ -1,4 +1,7 @@
 <?php
+// resume the session
+session_start();
+
 try {
   require_once "../src/RedirectController.php";
 
@@ -14,20 +17,9 @@ catch(Exception $e)
     header("Location: LoginForm.php?login=fail");
 }
 
-//This php code gets the selected user's security question from the database
-
-/*Get DB connection*/
-require_once "../src/DBController.php";
-
-/*Get the stored email*/
-$filename = "../resources/tmp.txt";
-$file = fopen($filename, "a+");
-$filesize = filesize($filename);
-$email = fread($file, $filesize);
-
-/*Get user's security question*/
-$query = "SELECT SQuestion FROM User WHERE Email = '$email'";
-$secquestion = $db->querySingle($query);
+//Get user's security question - now done within the controller
+require_once "../src/ForgotPwController.php";
+$secquestion = ForgotPwController::SecQ($_SESSION['email']);
 ?>
 
 <!DOCTYPE html>
