@@ -5,14 +5,14 @@ try {
   if ($GLOBALS['rc']->ValidateLogin()) 
   {
     //redirect to dashboard
-    header("Location: bin/nginx/www/public/dashboard.php");
+    header("Location: public/dashboard.php");
   } else {
       
     //redirect to login
-    header("Location: bin/nginx/www/public/LoginForm.php");
+    header("Location: public/LoginForm.php");
   }
 }
 catch(Exception $e)
 {
-    header("Location: bin/nginx/www/public/index.php?login=fail");
+    header("Location: public/index.php?login=fail");
 }

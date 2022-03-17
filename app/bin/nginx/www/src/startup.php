@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['dbPath'] = 'db/persistentconndb.sqlite';
+$GLOBALS['dbPath'] = 'bin/nginx/www/db/persistentconndb.sqlite';
 
 if(file_exists($GLOBALS['dbPath'])) {
     unlink($GLOBALS['dbPath']);
@@ -8,4 +8,4 @@ if(file_exists($GLOBALS['dbPath'])) {
 
 array_map('unlink', glob("uploads/*"));
 
-shell_exec('php config/Config.php');
+shell_exec('php bin/nginx/www/config/Config.php');
