@@ -1,4 +1,4 @@
-REM ECHO OFF
+ECHO OFF
 REM This starts up the database and the server
 cd nginx
 REM Starts the nginx server
@@ -15,7 +15,6 @@ REM Note that the web application will not work unless the server and cgi proces
 REM Prompt the user if they want to shut down the server or not
 :choice
 set /p input="Shut down the web server (Y/N)? "
-echo %input%
 if /i "%input%" EQU "Y" goto :yes
 if /i "%input%" EQU "YES" goto :yes
 if /i "%input%" EQU "N" goto :no
