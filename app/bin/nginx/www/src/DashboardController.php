@@ -2,9 +2,10 @@
 require_once "RedirectController.php";
    class DashboardController
    {
-       function Display($type)
+       function Display()
        {
-        switch($type)
+        $atype = $GLOBALS['rc']->GetType();
+        switch($atype)
         {
             case 1:
                 echo "
