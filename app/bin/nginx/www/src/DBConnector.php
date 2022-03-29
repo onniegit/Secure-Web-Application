@@ -1,6 +1,6 @@
 <?php
 require_once "../src/DBController.php";
-require_once "../src/SecurityController.php";
+require_once "../src/InputValidator.php";
 require_once "../src/User.php";
 
 class DBConnector

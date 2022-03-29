@@ -1,7 +1,7 @@
 <?php
 require_once "../src/DBConnector.php";
 require_once "../src/User.php";
-require_once "../src/SecurityController.php";
+require_once "../src/InputValidator.php";
 
 global $acctype;
 
@@ -11,8 +11,8 @@ class LoginController
     {
         if (LoginController::ValidateInput($un,$pw)==true) //Validate Input
         {
-            $uname = SecurityController::XssValidation($un); //to prevent XSS
-            $pword = SecurityController::XssValidation($pw);
+            $uname = InputValidator::XssValidation($un); //to prevent XSS
+            $pword = InputValidator::XssValidation($pw);
 
             $User = DBConnector::GetUser($uname); //GetUser() -> User
 
@@ -55,7 +55,7 @@ class LoginController
 
     function ValidateInput($un,$pw) // validates input for format
     {
-        if(SecurityController::ValidateEmail($un)==true AND SecurityController::ValidatePassword($pw)==true) return true;
+        if(InputValidator::ValidateEmail($un)==true AND InputValidator::ValidatePassword($pw)==true) return true;
 
         else return false;
     }
