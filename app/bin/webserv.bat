@@ -7,7 +7,7 @@ cd ..\..\
 REM Sets temporary path for libs
 SET PATH=php.exe
 REM Populates initial database
-php bin/nginx/www/src/startup.php
+php bin/nginx/www/src/StartupController.php
 REM Allows for running php script in nginx
 start /min php-cgi.exe -b 127.0.0.1:9000
 REM Note that the web application will not work unless the server and cgi processes are running
