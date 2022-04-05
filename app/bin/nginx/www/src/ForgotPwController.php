@@ -1,13 +1,13 @@
 <?php
 require_once "../src/DBConnector.php";
 require_once "../src/User.php";
-require_once "../src/InputValidator.php";
+require_once "../src/RequestController.php";
 
-class ForgotPwController
+class ForgotPwController extends RequestController
 {   
     public static function ForgotPassword($un) // if provided username exists, redirects user to answer their security question
     {
-        if (InputValidator::ValidateEmail($un)==true)
+        if (ForgotPwController::ValidateEmail($un)==true)
         {
             if (DBConnector::UsernameExists($un)==true)
             {
@@ -24,7 +24,7 @@ class ForgotPwController
     {
         $tempUser = DBConnector::TempUser($un);
         $myAnswer = $tempUser->GetSAnswer();
-        $userInput = InputValidator::XssValidation($answer);
+        $userInput = ForgotPwController::XssValidation($answer);
 
         if ($userInput == $myAnswer)
         {
@@ -50,7 +50,7 @@ class ForgotPwController
             header("Location: ../public/ForgotPasswordChange.php?blank");
         }
 
-        if (InputValidator::ValidatePassword($new)==true AND $newPassword == $newPasswordConfirm)
+        if (ForgotPwController::ValidatePassword($new)==true AND $newPassword == $newPasswordConfirm)
         {
             $hashedNewPassword = hash('ripemd256', $newPassword);
 
