@@ -46,8 +46,8 @@ else
 
         <!--Navigation Buttons-->
         <nav>
-            <button class="button_large" type="button" onclick="toDashboard();">Dashboard</button>
-            <button class="button_large" type="button" onclick="toLogout();">Log Out</button>
+            <button class="button_large" type="button" onclick="location.href = 'dashboard.php'">Dashboard</button>
+            <button class="button_large" type="button" location.href = 'dashboard.php'">Log Out</button>
         </nav>
 
         <main>

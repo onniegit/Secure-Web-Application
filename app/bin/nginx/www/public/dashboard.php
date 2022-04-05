@@ -50,7 +50,7 @@ if (!isset($_SESSION['email']) or (empty($_SESSION['email']))) //check that sess
 
       <!--Navigation Buttons-->
       <nav>
-          <button class="button_large" type="button" onclick="toLogout();">Log Out</button>
+          <button class="button_large" type="button" onclick="location.href = '../src/logout.php'">Log Out</button>
       </nav>
 
       <?php

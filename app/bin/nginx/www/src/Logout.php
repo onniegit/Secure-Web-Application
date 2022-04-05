@@ -1,14 +1,8 @@
 <?php
+require_once "../src/LogoutController.php";
 try {
-    session_start(); //required to bring session variables into context
-
-    if (isset($_SESSION['acctype'])) {
-        //a session exists
-        session_destroy(); //clear all session variables
-    }
-    else{throw new Exception("Session did not exist");}
-//redirect
-    header("Location: ../public/index.php");
+    
+        LogoutController::Logout();
 }
 catch(Exception $e)
 {
