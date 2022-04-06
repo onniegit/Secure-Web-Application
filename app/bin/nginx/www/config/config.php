@@ -370,79 +370,89 @@ BEGIN TRANSACTION;
       	VALUES ('113', '927000012', 'B');
 	INSERT INTO Grade (CRN, StudentID, Grade)
       	VALUES ('113', '927000022', 'F');
-      	
+
 /*--------------Role Values-----------------*/
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000000', 'Admin');
+	INSERT INTO Role (RoleID, Role)
+		VALUES ('1', 'Admin');
+		
+	INSERT INTO Role (RoleID, Role)
+		VALUES ('2', 'Faculty');
+		
+	INSERT INTO Role (RoleID, Role)
+		VALUES ('3', 'Student');
+
+/*--------------UserRole Values-----------------*/
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000000', '1');
       	
-    INSERT INTO Role (UserId, Role)
-      	VALUES ('927000001', 'Faculty');
+    INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000001', '2');
       	
-    INSERT INTO Role (UserId, Role)
-      	VALUES ('927000002', 'Faculty');
+    INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000002', '2');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000003', 'Faculty');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000003', '2');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000004', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000004', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000005', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000005', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000006', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000006', '3');
       	
-    INSERT INTO Role (UserId, Role)
-      	VALUES ('927000007', 'Student');
+    INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000007', '3');
       	
-    INSERT INTO Role (UserId, Role)
-      	VALUES ('927000008', 'Student');
+    INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000008', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000009', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000009', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000010', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000010', '3');
 
-	INSERT INTO Role (UserID, Role)
-      	VALUES ('927000011', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000011', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000012', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000012', '3');
       	
-    INSERT INTO Role (UserId, Role)
-      	VALUES ('927000013', 'Student');
+    INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000013', '3');
       	
-    INSERT INTO Role (UserId, Role)
-      	VALUES ('927000014', 'Student');
+    INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000014', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000015', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000015', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000016', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000016', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000017', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000017', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000018', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000018', '3');
       	
-    INSERT INTO Role (UserId, Role)
-      	VALUES ('927000019', 'Student');
+    INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000019', '3');
       	
-    INSERT INTO Role (UserId, Role)
-      	VALUES ('927000020', 'Student');
+    INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000020', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000021', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000021', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000022', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000022', '3');
 
-	INSERT INTO Role (UserId, Role)
-      	VALUES ('927000023', 'Student');
+	INSERT INTO UserRole (uid, tid)
+      	VALUES ('927000023', '3');
       	
       	END TRANSACTION;
 EOF;
