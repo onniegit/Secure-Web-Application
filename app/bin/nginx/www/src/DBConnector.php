@@ -7,16 +7,19 @@ class DBConnector
 // all database interaction is handled within this class
 // prepared statements are used throughout to prevent SQL injection
 {
-    public static function GetUser($un) // returns a User pbject from the database
+    public static function GetUser($un) // returns a User object from the database
     {
-        $query = "SELECT * FROM User WHERE Email=:un";
+        $query = "SELECT * 
+                    FROM User
+                    INNER JOIN UserRole ON User.UserID = UserRole.uid
+                    WHERE Email=:un";
         $stmt = $GLOBALS['db']->prepare($query);
         $stmt->bindParam(':un',$un, SQLITE3_TEXT);
         $result = $stmt->execute();
         $userinfo = array();
 
         while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-            array_push($userinfo, $row['UserID'], $row['Email'], $row['Password'], $row['FName'], $row['LName'], $row['DOB'], 
+            array_push($userinfo, $row['UserID'], $row['Email'], $row['AccType'], $row['Password'], $row['FName'], $row['LName'], $row['DOB'], 
             $row['Year'], $row['Rank'], $row['SQuestion'], $row['SAnswer']);
         }
 
@@ -24,14 +27,15 @@ class DBConnector
         {
             $User = new User();
             $User->SetEmail($userinfo[1]);
-            $User->SetPassword($userinfo[2]);
-            $User->SetFName($userinfo[3]);
-            $User->SetLName($userinfo[4]);
-            $User->SetDOB($userinfo[5]);
-            $User->SetYear($userinfo[6]);
-            $User->SetRank($userinfo[7]);
-            $User->SetSQuestion($userinfo[8]);
-            $User->SetSAnswer($userinfo[9]);
+            $User->SetAccType($userinfo[2]);
+            $User->SetPassword($userinfo[3]);
+            $User->SetFName($userinfo[4]);
+            $User->SetLName($userinfo[5]);
+            $User->SetDOB($userinfo[6]);
+            $User->SetYear($userinfo[7]);
+            $User->SetRank($userinfo[8]);
+            $User->SetSQuestion($userinfo[9]);
+            $User->SetSAnswer($userinfo[10]);
 
             return $User;
         }
@@ -71,20 +75,21 @@ class DBConnector
         $userinfo = array();
 
         while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-            array_push($userinfo, $row['UserID'], $row['Email'], $row['Password'], $row['FName'], $row['LName'], $row['DOB'], 
+            array_push($userinfo, $row['UserID'], $row['Email'], $row['AccType'], $row['Password'], $row['FName'], $row['LName'], $row['DOB'], 
             $row['Year'], $row['Rank'], $row['SQuestion'], $row['SAnswer']);
         }
 
         $User = new User();
         $User->SetEmail($userinfo[1]);
-        $User->SetPassword($userinfo[2]);
-        $User->SetFName($userinfo[3]);
-        $User->SetLName($userinfo[4]);
-        $User->SetDOB($userinfo[5]);
-        $User->SetYear($userinfo[6]);
-        $User->SetRank($userinfo[7]);
-        $User->SetSQuestion($userinfo[8]);
-        $User->SetSAnswer($userinfo[9]);
+        $User->SetAccType($userinfo[2]);
+        $User->SetPassword($userinfo[3]);
+        $User->SetFName($userinfo[4]);
+        $User->SetLName($userinfo[5]);
+        $User->SetDOB($userinfo[6]);
+        $User->SetYear($userinfo[7]);
+        $User->SetRank($userinfo[8]);
+        $User->SetSQuestion($userinfo[9]);
+        $User->SetSAnswer($userinfo[10]);
 
         return $User;
     }

@@ -108,22 +108,22 @@ CREATE TABLE Resource
 CREATE TABLE UserRole
 		(
 	uid			INT		NOT NULL,
-	tid			INT		NOT NULL,
-	PRIMARY KEY(uid, tid),
+	AccType		INT		NOT NULL,
+	PRIMARY KEY(uid, AccType),
 	FOREIGN KEY (uid) REFERENCES User (UserID) ON
 			DELETE SET NULL ON UPDATE CASCADE,
-	FOREIGN KEY (tid) REFERENCES Role (RoleID) ON
+	FOREIGN KEY (AccType) REFERENCES Role (RoleID) ON
 			DELETE SET NULL ON UPDATE CASCADE
 	);
 
 CREATE TABLE AccessRight
 		(
-	uid			INT		NOT NULL,
+	RoleId		INT		NOT NULL,
 	rid			INT		NOT NULL,
-	PRIMARY KEY(uid, rid),
-	FOREIGN KEY (uid) REFERENCES User (UserID) ON
+	PRIMARY KEY(RoleId, rid),
+	FOREIGN KEY (RoleId) REFERENCES Role (RoleID) ON
 			DELETE SET NULL ON UPDATE CASCADE,
-	FOREIGN KEY (rid) REFERENCES Role (RoleID) ON
+	FOREIGN KEY (rid) REFERENCES Resource (ResourceID) ON
 			DELETE SET NULL ON UPDATE CASCADE
 	);
 
@@ -382,76 +382,76 @@ BEGIN TRANSACTION;
 		VALUES ('3', 'Student');
 
 /*--------------UserRole Values-----------------*/
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000000', '1');
       	
-    INSERT INTO UserRole (uid, tid)
+    INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000001', '2');
       	
-    INSERT INTO UserRole (uid, tid)
+    INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000002', '2');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000003', '2');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000004', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000005', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000006', '3');
       	
-    INSERT INTO UserRole (uid, tid)
+    INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000007', '3');
       	
-    INSERT INTO UserRole (uid, tid)
+    INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000008', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000009', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000010', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000011', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000012', '3');
       	
-    INSERT INTO UserRole (uid, tid)
+    INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000013', '3');
       	
-    INSERT INTO UserRole (uid, tid)
+    INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000014', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000015', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000016', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000017', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000018', '3');
       	
-    INSERT INTO UserRole (uid, tid)
+    INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000019', '3');
       	
-    INSERT INTO UserRole (uid, tid)
+    INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000020', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000021', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000022', '3');
 
-	INSERT INTO UserRole (uid, tid)
+	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000023', '3');
       	
       	END TRANSACTION;
