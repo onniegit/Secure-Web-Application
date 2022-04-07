@@ -68,7 +68,10 @@ class DBConnector
 
     public static function TempUser($un) // returns a User object
     {
-        $query = "SELECT * FROM User WHERE Email=:un";
+        $query = "SELECT * 
+                    FROM User
+                    INNER JOIN UserRole ON User.UserID = UserRole.uid
+                    WHERE Email=:un";
         $stmt = $GLOBALS['db']->prepare($query);
         $stmt->bindParam(':un',$un, SQLITE3_TEXT);
         $result = $stmt->execute();
