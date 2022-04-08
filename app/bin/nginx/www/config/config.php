@@ -101,7 +101,7 @@ CREATE TABLE Role
 
 CREATE TABLE Resource
 		(
-	ResourceID			INT		PRIMARY KEY		NOT NULL	UNIQUE,
+	ResourceID			INTEGER		PRIMARY KEY		AUTOINCREMENT,
 	ResourceName		TEXT	NOT NULL
 	);
 
@@ -453,6 +453,105 @@ BEGIN TRANSACTION;
 
 	INSERT INTO UserRole (uid, AccType)
       	VALUES ('927000023', '3');
+
+/*--------------Resource Values-----------------*/
+	INSERT INTO Resource (ResourceName)
+		VALUES ('course_enroll.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('course_search.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('create_account.php');
+
+	INSERT INTO Resource (ResourceName)
+		VALUES ('dashboard.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('edit_account.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('enter_grades.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('ForgotPassword.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('ForgotPasswordChange.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('ForgotPasswordSecQ.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('LoginForm.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('user_search.php');
+
+/*--------------Resource Values-----------------*/
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '3');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '4');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '5');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '7');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '8');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '9');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '10');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '11');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '4');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '6');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '7');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '8');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '9');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '10');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '1');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '2');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '4');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '7');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '8');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '9');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '10');
+	
       	
       	END TRANSACTION;
 EOF;
