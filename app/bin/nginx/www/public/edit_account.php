@@ -30,7 +30,7 @@ require_once "../src/DBController.php";
 
 $prevemail = strtolower($_POST['email']);
 
-$query = "SELECT * FROM User WHERE Email = :prevemail";
+$query = "SELECT * FROM User INNER JOIN UserRole ON User.UserID = UserRole.uid WHERE Email = :prevemail";
 $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
 $stmt->bindParam(':prevemail', $prevemail, SQLITE3_TEXT);
 $results = $stmt->execute();
@@ -86,7 +86,7 @@ else
 
         <main>
 
-            <!--Heading-->
+        <!--Heading-->
             <h1>Edit Account</h1>
             <div class=horizontal_line>
                 <hr>
@@ -113,8 +113,8 @@ else
                     <form action="../src/EditAccountUpdateLogic.php" method="POST" id="accform">
                         <label class="edit_acc_label">Account type:</label>
                         <select name="acctype" id="acctype" onchange="swapselection()">
-                            <option value="2" <?php if($userinfo[2]===2){echo "selected";} ?> ">Faculty</option>
-                            <option value="3" <?php if($userinfo[2]===3){echo "selected";} ?> ">Student</option>
+                            <option value="2" <?php if($userinfo[11]===2){echo "selected";} ?> ">Faculty</option>
+                            <option value="3" <?php if($userinfo[11]===3){echo "selected";} ?> ">Student</option>
                         </select>
                     <div class=horizontal_line>
                         <hr>
@@ -128,7 +128,7 @@ else
                                     <label class = "edit_acc_label"> First Name: </label>
                                 </td>
                                 <td>
-                                    <input type="text" id="fname" name="fname" value="<?php if(!$error){echo "$userinfo[4]";} ?>">
+                                    <input type="text" id="fname" name="fname" value="<?php if(!$error){echo "$userinfo[3]";} ?>">
                                 </td>
 
                                 <!--Last Name-->
@@ -136,7 +136,7 @@ else
                                     <label class = "edit_acc_label"> Last Name: </label>
                                 </td>
                                 <td>
-                                    <input type="text" id="lname" name="lname" value="<?php if(!$error){echo "$userinfo[5]";} ?>">
+                                    <input type="text" id="lname" name="lname" value="<?php if(!$error){echo "$userinfo[4]";} ?>">
                                 </td>
                             </tr>
 
@@ -146,7 +146,7 @@ else
                                     <label class = "edit_acc_label"> Date of Birth: </label>
                                 </td>
                                 <td>
-                                    <input type="date" id="dob" name="dob" value="<?php if(!$error){echo $userinfo[6];} ?>">
+                                    <input type="date" id="dob" name="dob" value="<?php if(!$error){echo $userinfo[5];} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -159,25 +159,25 @@ else
                             <tr>
                                 <!--Faculty Rank/Student Year-->
                                 <td>
-                                    <label class = "edit_acc_label" id="positionlabel"> <?php if($userinfo[2]===3){echo "Year:";} else {echo "Rank:";}?> </label>
+                                    <label class = "edit_acc_label" id="positionlabel"> <?php if($userinfo[11]===3){echo "Year:";} else {echo "Rank:";}?> </label>
                                 </td>
                                 <td>
-                                    <select name="studentyear" id="studentyear" style = "<?php if($userinfo[2]!==3){echo "display:none";}?>">
+                                    <select name="studentyear" id="studentyear" style = "<?php if($userinfo[11]!==3){echo "display:none";}?>">
                                         <optgroup label="Student">
-                                            <option value="1" <?php if($userinfo[7] == 1){echo "selected";} ?>>Freshman</option>
-                                            <option value="2" <?php if($userinfo[7] == 2){echo "selected";} ?>>Sophomore</option>
-                                            <option value="3" <?php if($userinfo[7] == 3){echo "selected";} ?>>Junior</option>
-                                            <option value="4" <?php if($userinfo[7] == 4){echo "selected";} ?>>Senior</option>
+                                            <option value="1" <?php if($userinfo[6] == 1){echo "selected";} ?>>Freshman</option>
+                                            <option value="2" <?php if($userinfo[6] == 2){echo "selected";} ?>>Sophomore</option>
+                                            <option value="3" <?php if($userinfo[6] == 3){echo "selected";} ?>>Junior</option>
+                                            <option value="4" <?php if($userinfo[6] == 4){echo "selected";} ?>>Senior</option>
                                         </optgroup>
                                     </select>
-                                    <select name="facultyrank" id="facultyrank" style = "<?php if($userinfo[2]!==2){echo "display:none";}?>">
+                                    <select name="facultyrank" id="facultyrank" style = "<?php if($userinfo[11]!==2){echo "display:none";}?>">
                                         <optgroup label="Faculty">
-                                            <option value="Instructor" <?php if($userinfo[8] === "Instructor"){echo "selected";} ?>>Instructor</option>
-                                            <option value="Adjunct" <?php if($userinfo[8] === "Adjunct"){echo "selected";} ?>>Adjunct Professor</option>
-                                            <option value="Assistant" <?php if($userinfo[8] === "Assistant"){echo "selected";} ?>>Assistant Professor</option>
-                                            <option value="Associate" <?php if($userinfo[8] === "Associate"){echo "selected";} ?>>Associate Professor</option>
-                                            <option value="Professor" <?php if($userinfo[8] === "Professor"){echo "selected";} ?>>Professor</option>
-                                            <option value="Emeritus" <?php if($userinfo[8] === "Emeritus"){echo "selected";} ?>>Professor Emeritus</option>
+                                            <option value="Instructor" <?php if($userinfo[7] === "Instructor"){echo "selected";} ?>>Instructor</option>
+                                            <option value="Adjunct" <?php if($userinfo[7] === "Adjunct"){echo "selected";} ?>>Adjunct Professor</option>
+                                            <option value="Assistant" <?php if($userinfo[7] === "Assistant"){echo "selected";} ?>>Assistant Professor</option>
+                                            <option value="Associate" <?php if($userinfo[7] === "Associate"){echo "selected";} ?>>Associate Professor</option>
+                                            <option value="Professor" <?php if($userinfo[7] === "Professor"){echo "selected";} ?>>Professor</option>
+                                            <option value="Emeritus" <?php if($userinfo[7] === "Emeritus"){echo "selected";} ?>>Professor Emeritus</option>
                                         </optgroup>
                                     </select>
                                 </td>
@@ -250,7 +250,7 @@ else
                                     <label class = "edit_acc_label"> Password: </label>
                                 </td>
                                 <td>
-                                    <input type="password" name="password" id="password" value="<?php if(!$error){echo "$userinfo[3]";} ?>">
+                                    <input type="password" name="password" id="password" value="<?php if(!$error){echo "$userinfo[2]";} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -266,7 +266,7 @@ else
                                     <label class = "edit_acc_label"> Confirm Password: </label>
                                 </td>
                                 <td>
-                                    <input type="password" name="confirmpassword" id="confirmpassword" value="<?php if(!$error){echo "$userinfo[3]";} ?>">
+                                    <input type="password" name="confirmpassword" id="confirmpassword" value="<?php if(!$error){echo "$userinfo[2]";} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -294,7 +294,7 @@ else
                                     <label class = "edit_acc_label"> Security Question: </label>
                                 </td>
                                 <td>
-                                    <input type="text" name="squestion" value="<?php if(!$error){echo "$userinfo[9]";} ?>">
+                                    <input type="text" name="squestion" value="<?php if(!$error){echo "$userinfo[8]";} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -310,7 +310,7 @@ else
                                     <label class = "edit_acc_label"> Answer: </label>
                                 </td>
                                 <td>
-                                    <input type="text" name="sanswer" value="<?php if(!$error){echo "$userinfo[10]";} ?>">
+                                    <input type="text" name="sanswer" value="<?php if(!$error){echo "$userinfo[9]";} ?>">
                                 </td>
 
                                 <!--Blank-->
