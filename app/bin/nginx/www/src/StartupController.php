@@ -1,5 +1,11 @@
 <?php
 
+clearDB();
+
+clearUploads();
+
+loadConfig();
+
 function clearDB() 
 {
     $GLOBALS['dbPath'] = 'bin/nginx/www/db/persistentconndb.sqlite';

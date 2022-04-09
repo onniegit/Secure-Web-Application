@@ -19,7 +19,7 @@ class InputValidator
         else return false;
     }
 
-    function XssValidation($input) // applies in-built php method to input to prvent XSS
+    function XssValidation($input) // applies in-built php method to input to prevent XSS
     {
         return htmlspecialchars($input);
     }
