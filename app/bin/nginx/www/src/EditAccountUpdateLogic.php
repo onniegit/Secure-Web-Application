@@ -30,11 +30,10 @@ try {
 
     /*Update the database with the new info*/
     $query = "UPDATE User 
-            SET Email = :email, AccType = :acctype, Password = :password, FName = :fname, LName = :lname, DOB = :dob, Year = :studentyear, Rank = :facultyrank, SQuestion = :squestion, SAnswer = :sanswer 
+            SET Email = :email, Password = :password, FName = :fname, LName = :lname, DOB = :dob, Year = :studentyear, Rank = :facultyrank, SQuestion = :squestion, SAnswer = :sanswer 
             WHERE Email = :prevemail";
     $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
     $stmt->bindParam(':email', $email, SQLITE3_TEXT);
-    $stmt->bindParam(':acctype', $acctype, SQLITE3_INTEGER);
     $stmt->bindParam(':password', $password, SQLITE3_TEXT);
     $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
     $stmt->bindParam(':lname', $lname, SQLITE3_TEXT);
@@ -45,6 +44,24 @@ try {
     $stmt->bindParam(':sanswer', $sanswer, SQLITE3_TEXT);
     $stmt->bindParam(':prevemail', $prevemail, SQLITE3_TEXT);
     $results = $stmt->execute();
+
+    if($results){//query to User table is successful
+        $query = "SELECT * FROM User 
+                WHERE Email = :email";
+        $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
+        $stmt->bindParam(':email', $email, SQLITE3_TEXT);
+        $results = $stmt->execute();
+    }
+
+    if(($userinfo = $results->fetchArray()) !== null){//checks if rows exist
+        $query = "UPDATE UserRole 
+                SET AccType = :acctype
+                WHERE :userid = uid";
+        $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
+        $stmt->bindParam(':acctype', $acctype, SQLITE3_INTEGER);
+        $stmt->bindParam(':userid', $userinfo[0], SQLITE3_INTEGER);
+        $results = $stmt->execute();
+    }
 
 //is true on success and false on failure
     if (!$results) {

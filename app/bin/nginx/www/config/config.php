@@ -37,7 +37,6 @@ CREATE TABLE User
       	(
 	UserID	    	INT	    PRIMARY KEY     NOT NULL	UNIQUE,
 	Email		    TEXT 	NOT NULL	UNIQUE,
-	AccType    	    INT     NOT NULL,
 	Password    	TEXT    NOT NULL,      		
 	FName          	TEXT    NOT NULL,
 	LName           TEXT    NOT NULL,
@@ -45,9 +44,7 @@ CREATE TABLE User
     Year		    INT,
 	Rank		    TEXT,
 	SQuestion	    TEXT	NOT NULL,
-	SAnswer		    TEXT	NOT NULL,
-	FOREIGN KEY (AccType) REFERENCES Role (RoleID) ON
-    		DELETE SET NULL ON UPDATE CASCADE
+	SAnswer		    TEXT	NOT NULL
 	);
 
 CREATE TABLE Section
@@ -97,87 +94,114 @@ CREATE TABLE Course
 	);
 
 CREATE TABLE Role
-      	(
+		(
 	RoleID		INT	    PRIMARY KEY 	NOT NULL	UNIQUE,
 	Role		TEXT	NOT NULL
 	);
 
+CREATE TABLE Resource
+		(
+	ResourceID			INTEGER		PRIMARY KEY		AUTOINCREMENT,
+	ResourceName		TEXT	NOT NULL
+	);
+
+CREATE TABLE UserRole
+		(
+	uid			INT		NOT NULL,
+	AccType		INT		NOT NULL,
+	PRIMARY KEY(uid, AccType),
+	FOREIGN KEY (uid) REFERENCES User (UserID) ON
+			DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (AccType) REFERENCES Role (RoleID) ON
+			DELETE SET NULL ON UPDATE CASCADE
+	);
+
+CREATE TABLE AccessRight
+		(
+	RoleId		INT		NOT NULL,
+	rid			INT		NOT NULL,
+	PRIMARY KEY(RoleId, rid),
+	FOREIGN KEY (RoleId) REFERENCES Role (RoleID) ON
+			DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (rid) REFERENCES Resource (ResourceID) ON
+			DELETE SET NULL ON UPDATE CASCADE
+	);
 
 BEGIN TRANSACTION;
 /*--------------User Values-----------------*/
 /*---------Emails must be lowercase---------*/
 /*--------UserID must be sequential---------*/
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000000', 'admin@email.com', '1', '$HashedPasswords[0]', 'John', 'Doe', '1990-12-02', NULL, NULL, 'How many siblings do you have?', '0');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000000', 'admin@email.com', '$HashedPasswords[0]', 'John', 'Doe', '1990-12-02', NULL, NULL, 'How many siblings do you have?', '0');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000001', 'scienceguy@email.com', '2', '$HashedPasswords[1]', 'Bill', 'Nye', '1955-11-27', NULL, 'Associate', 'Favorite Relative?', 'Charity Nye');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000001', 'scienceguy@email.com', '$HashedPasswords[1]', 'Bill', 'Nye', '1955-11-27', NULL, 'Associate', 'Favorite Relative?', 'Charity Nye');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000002', 'gsinclair@email.com', '2', '$HashedPasswords[2]', 'George', 'Sinclair', '1955-03-08', NULL, 'Adjunct', 'Who is your best friend?', 'Marisol');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000002', 'gsinclair@email.com', '$HashedPasswords[2]', 'George', 'Sinclair', '1955-03-08', NULL, 'Adjunct', 'Who is your best friend?', 'Marisol');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000003', 'ssether@email.com', '2', '$HashedPasswords[3]', 'Sean', 'Sether', '1951-03-09', NULL, 'Associate', 'Who is your favorite author?', 'Stephen King');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000003', 'ssether@email.com', '$HashedPasswords[3]', 'Sean', 'Sether', '1951-03-09', NULL, 'Associate', 'Who is your favorite author?', 'Stephen King');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000004', 'student@email.com', '3', '$HashedPasswords[4]', 'Robert', 'Moody', '1964-04-12', '4', NULL, 'Where were you born?', 'Los Angeles, CA');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000004', 'student@email.com', '$HashedPasswords[4]', 'Robert', 'Moody', '1964-04-12', '4', NULL, 'Where were you born?', 'Los Angeles, CA');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000005', 'wmain@email.com', '3', '$HashedPasswords[5]', 'Wallace', 'Main', '1975-06-20', '1', NULL, 'What is your favorite sport?', 'Soccer');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000005', 'wmain@email.com', '$HashedPasswords[5]', 'Wallace', 'Main', '1975-06-20', '1', NULL, 'What is your favorite sport?', 'Soccer');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000006', 'dbarney@email.com', '3', '$HashedPasswords[6]', 'Dessie', 'Barney', '1979-01-18', '2', NULL, 'Who is your best friend?', 'Katherine');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000006', 'dbarney@email.com', '$HashedPasswords[6]', 'Dessie', 'Barney', '1979-01-18', '2', NULL, 'Who is your best friend?', 'Katherine');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000007', 'bcummings@email.com', '3', '$HashedPasswords[7]', 'Bernie', 'Cummings', '1958-07-27', '3', NULL, 'Who is your favorite teacher?', 'Steven Howell');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000007', 'bcummings@email.com', '$HashedPasswords[7]', 'Bernie', 'Cummings', '1958-07-27', '3', NULL, 'Who is your favorite teacher?', 'Steven Howell');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000008', 'sspangler@email.com', '3', '$HashedPasswords[8]', 'Sandra', 'Spangler', '1962-12-27', '4', NULL, 'What is your favorite sport?', 'Football');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000008', 'sspangler@email.com', '$HashedPasswords[8]', 'Sandra', 'Spangler', '1962-12-27', '4', NULL, 'What is your favorite sport?', 'Football');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000009', 'jhuse@email.com', '3', '$HashedPasswords[9]', 'Julie', 'Huse', '1990-10-10', '2', NULL, 'Who is your favorite teacher?', 'Dean Montoya');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000009', 'jhuse@email.com', '$HashedPasswords[9]', 'Julie', 'Huse', '1990-10-10', '2', NULL, 'Who is your favorite teacher?', 'Dean Montoya');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000010', 'vmcdonald@email.com', '3', '$HashedPasswords[10]', 'Vilma', 'Mcdonald', '1977-03-03', '4', NULL, 'What is your favorite TV show?', 'Seinfeld');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000010', 'vmcdonald@email.com', '$HashedPasswords[10]', 'Vilma', 'Mcdonald', '1977-03-03', '4', NULL, 'What is your favorite TV show?', 'Seinfeld');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000011', 'ccross@email.com', '3', '$HashedPasswords[11]', 'Curtis', 'Cross', '1990-07-13', '3', NULL, 'Who is your favorite teacher?', 'Rhonda Brown');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000011', 'ccross@email.com', '$HashedPasswords[11]', 'Curtis', 'Cross', '1990-07-13', '3', NULL, 'Who is your favorite teacher?', 'Rhonda Brown');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000012', 'tsanchez@email.com', '3', '$HashedPasswords[12]', 'Terrance', 'Sanchez', '1973-05-30', '4', NULL, 'What is your favorite TV show?', 'The Office');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000012', 'tsanchez@email.com', '$HashedPasswords[12]', 'Terrance', 'Sanchez', '1973-05-30', '4', NULL, 'What is your favorite TV show?', 'The Office');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000013', 'vmccall@email.com', '3', '$HashedPasswords[13]', 'Virginia', 'McCall', '1971-10-10', '3', NULL, 'Who is your best friend?', 'Charles');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000013', 'vmccall@email.com', '$HashedPasswords[13]', 'Virginia', 'McCall', '1971-10-10', '3', NULL, 'Who is your best friend?', 'Charles');
       	
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000014', 'eburton@email.com', '3', '$HashedPasswords[14]', 'Evelyn', 'Burton', '1981-05-21', '1', NULL, 'Who is your best friend?', 'Delores');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000014', 'eburton@email.com', '$HashedPasswords[14]', 'Evelyn', 'Burton', '1981-05-21', '1', NULL, 'Who is your best friend?', 'Delores');
       	
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000015', 'bprice@email.com', '3', '$HashedPasswords[15]', 'Bo', 'Price', '1969-05-16', '2', NULL, 'Who is your best friend?', 'Ignacio');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000015', 'bprice@email.com', '$HashedPasswords[15]', 'Bo', 'Price', '1969-05-16', '2', NULL, 'Who is your best friend?', 'Ignacio');
       	
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000016', 'kmorales@email.com', '3', '$HashedPasswords[16]', 'Kelly', 'Morales', '1959-07-09', '2', NULL, 'Who is your favorite teacher?', 'Omar Corbin');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000016', 'kmorales@email.com', '$HashedPasswords[16]', 'Kelly', 'Morales', '1959-07-09', '2', NULL, 'Who is your favorite teacher?', 'Omar Corbin');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000017', 'whargrove@email.com', '3', '$HashedPasswords[17]', 'Wendell', 'Hargrove', '1971-08-09', '1', NULL, 'What is your favorite TV show?', 'Band of Brothers');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000017', 'whargrove@email.com', '$HashedPasswords[17]', 'Wendell', 'Hargrove', '1971-08-09', '1', NULL, 'What is your favorite TV show?', 'Band of Brothers');
       	
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000018', 'jdegreenia@email.com', '3', '$HashedPasswords[18]', 'John', 'Degreenia', '1960-01-31', '1', NULL, 'Where did you grow up?', 'Houston,TX');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000018', 'jdegreenia@email.com', '$HashedPasswords[18]', 'John', 'Degreenia', '1960-01-31', '1', NULL, 'Where did you grow up?', 'Houston,TX');
       	
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000019', 'dschubert@email.com', '3', '$HashedPasswords[19]', 'David', 'Schubert', '1967-10-20', '3', NULL, 'How many siblings do you have?', '1');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000019', 'dschubert@email.com', '$HashedPasswords[19]', 'David', 'Schubert', '1967-10-20', '3', NULL, 'How many siblings do you have?', '1');
       	
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000020', 'nsimpson@email.com', '3', '$HashedPasswords[20]', 'Nestor', 'Simpson', '1959-04-09', '1', NULL, 'What is your favorite TV show?', 'Firefly');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000020', 'nsimpson@email.com', '$HashedPasswords[20]', 'Nestor', 'Simpson', '1959-04-09', '1', NULL, 'What is your favorite TV show?', 'Firefly');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000021', 'jneff@email.com', '3', '$HashedPasswords[21]', 'James', 'Neff', '1954-10-18', '1', NULL, 'Who is your favorite author?', 'George Simenon');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000021', 'jneff@email.com', '$HashedPasswords[21]', 'James', 'Neff', '1954-10-18', '1', NULL, 'Who is your favorite author?', 'George Simenon');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000022', 'ejuel@email.com', '3', '$HashedPasswords[22]', 'Edith', 'Juel', '1966-10-11', '3', NULL, 'How many siblings do you have?', '5');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000022', 'ejuel@email.com', '$HashedPasswords[22]', 'Edith', 'Juel', '1966-10-11', '3', NULL, 'How many siblings do you have?', '5');
 
-	INSERT INTO User (UserID, Email, AccType, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
-      	VALUES ('927000023', 'brivett@email.com', '3', '$HashedPasswords[23]', 'Barbara', 'Rivett', '1951-11-25', '2', NULL, 'Who is your best friend?', 'Roberto');
+	INSERT INTO User (UserID, Email, Password, FName, LName, DOB, Year, Rank, SQuestion, SAnswer)
+      	VALUES ('927000023', 'brivett@email.com', '$HashedPasswords[23]', 'Barbara', 'Rivett', '1951-11-25', '2', NULL, 'Who is your best friend?', 'Roberto');
 
 
 /*--------------Course Values-----------------*/
@@ -346,16 +370,188 @@ BEGIN TRANSACTION;
       	VALUES ('113', '927000012', 'B');
 	INSERT INTO Grade (CRN, StudentID, Grade)
       	VALUES ('113', '927000022', 'F');
-      	
+
 /*--------------Role Values-----------------*/
 	INSERT INTO Role (RoleID, Role)
-      	VALUES ('1', 'Admin');
+		VALUES ('1', 'Admin');
+		
+	INSERT INTO Role (RoleID, Role)
+		VALUES ('2', 'Faculty');
+		
+	INSERT INTO Role (RoleID, Role)
+		VALUES ('3', 'Student');
+
+/*--------------UserRole Values-----------------*/
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000000', '1');
       	
-    INSERT INTO Role (RoleID, Role)
-      	VALUES ('2', 'Faculty');
+    INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000001', '2');
       	
-    INSERT INTO Role (RoleID, Role)
-      	VALUES ('3', 'Student');
+    INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000002', '2');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000003', '2');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000004', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000005', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000006', '3');
+      	
+    INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000007', '3');
+      	
+    INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000008', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000009', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000010', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000011', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000012', '3');
+      	
+    INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000013', '3');
+      	
+    INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000014', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000015', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000016', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000017', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000018', '3');
+      	
+    INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000019', '3');
+      	
+    INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000020', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000021', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000022', '3');
+
+	INSERT INTO UserRole (uid, AccType)
+      	VALUES ('927000023', '3');
+
+/*--------------Resource Values-----------------*/
+	INSERT INTO Resource (ResourceName)
+		VALUES ('course_enroll.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('course_search.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('create_account.php');
+
+	INSERT INTO Resource (ResourceName)
+		VALUES ('dashboard.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('edit_account.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('enter_grades.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('ForgotPassword.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('ForgotPasswordChange.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('ForgotPasswordSecQ.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('LoginForm.php');
+	
+	INSERT INTO Resource (ResourceName)
+		VALUES ('user_search.php');
+
+/*--------------Resource Values-----------------*/
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '3');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '4');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '5');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '7');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '8');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '9');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '10');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '11');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '4');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '6');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '7');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '8');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '9');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '10');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '1');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '2');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '4');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '7');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '8');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '9');
+	
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '10');
+	
       	
       	END TRANSACTION;
 EOF;

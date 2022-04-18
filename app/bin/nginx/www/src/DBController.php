@@ -9,7 +9,8 @@
          {
             //send back student type search results
     
-            $query = "SELECT * FROM User WHERE AccType=3 AND 
+            $query = "SELECT * FROM User
+                INNER JOIN UserRole ON User.UserID = UserRole.uid WHERE AccType=3 AND 
                 (Fname LIKE :fname OR :fname = 'defaultvalue!') AND
                 (Lname LIKE :lname OR :lname = 'defaultvalue!') AND
                 (DOB LIKE :dob OR :dob = 'defaultvalue!') AND
@@ -27,7 +28,8 @@
         function usersearchfaculty($db,$facultyrank,$fname,$lname,$dob,$email){
             //send back faculty type search results
     
-            $query = "SELECT * FROM User WHERE AccType=2 AND 
+            $query = "SELECT * FROM User 
+                INNER JOIN UserRole ON User.UserID = UserRole.uid WHERE AccType=2 AND 
                 (Fname LIKE :fname OR :fname = 'defaultvalue!') AND
                 (Lname LIKE :lname OR :lname = 'defaultvalue!') AND
                 (DOB LIKE :dob OR :dob = 'defaultvalue!') AND
@@ -44,7 +46,8 @@
         function gensearch($db,$fname,$lname,$dob,$email,$facultyrank) {
             //send back a general search (may change to exclude admins)
     
-            $query = "SELECT * FROM User WHERE
+            $query = "SELECT * FROM User
+                INNER JOIN UserRole ON User.UserID = UserRole.uid WHERE
                 (Fname LIKE :fname OR :fname = 'defaultvalue!') AND
                 (Lname LIKE :lname OR :lname = 'defaultvalue!') AND
                 (DOB LIKE :dob OR :dob = 'defaultvalue!') AND

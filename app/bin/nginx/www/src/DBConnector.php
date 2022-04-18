@@ -7,9 +7,12 @@ class DBConnector
 // all database interaction is handled within this class
 // prepared statements are used throughout to prevent SQL injection
 {
-    public static function GetUser($un) // returns a User pbject from the database
+    public static function GetUser($un) // returns a User object from the database
     {
-        $query = "SELECT * FROM User WHERE Email=:un";
+        $query = "SELECT * 
+                    FROM User
+                    INNER JOIN UserRole ON User.UserID = UserRole.uid
+                    WHERE Email=:un";
         $stmt = $GLOBALS['db']->prepare($query);
         $stmt->bindParam(':un',$un, SQLITE3_TEXT);
         $result = $stmt->execute();
@@ -65,7 +68,10 @@ class DBConnector
 
     public static function TempUser($un) // returns a User object
     {
-        $query = "SELECT * FROM User WHERE Email=:un";
+        $query = "SELECT * 
+                    FROM User
+                    INNER JOIN UserRole ON User.UserID = UserRole.uid
+                    WHERE Email=:un";
         $stmt = $GLOBALS['db']->prepare($query);
         $stmt->bindParam(':un',$un, SQLITE3_TEXT);
         $result = $stmt->execute();

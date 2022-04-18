@@ -85,11 +85,10 @@ try {
     if ($results) //user doesn't already exist
     {
         /*Update the database with the new info*/
-        $query = "INSERT INTO User VALUES (:newUserID, :email, :acctype, :password, :fname, :lname, :dob, :studentyear, :facultyrank, :squestion, :sanswer)";
+        $query = "INSERT INTO User VALUES (:newUserID, :email, :password, :fname, :lname, :dob, :studentyear, :facultyrank, :squestion, :sanswer)";
         $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
         $stmt->bindParam(':newUserID', $newUserID, SQLITE3_INTEGER);
         $stmt->bindParam(':email', $email, SQLITE3_TEXT);
-        $stmt->bindParam(':acctype', $acctype, SQLITE3_INTEGER);
         $stmt->bindParam(':password', $password, SQLITE3_TEXT);
         $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
         $stmt->bindParam(':lname', $lname, SQLITE3_TEXT);
@@ -100,6 +99,14 @@ try {
         $stmt->bindParam(':sanswer', $sanswer, SQLITE3_TEXT);
         global $results;
         $results = $stmt->execute();
+
+        if($results){//query to User table is successful
+        $query = "INSERT INTO UserRole VALUES (:newUserID, :acctype)";
+        $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
+        $stmt->bindParam(':newUserID', $newUserID, SQLITE3_INTEGER);
+        $stmt->bindParam(':acctype', $acctype, SQLITE3_INTEGER);
+        $results = $stmt->execute();
+        }
     }
 
 //is true on success and false on failure (can fail in either query)
