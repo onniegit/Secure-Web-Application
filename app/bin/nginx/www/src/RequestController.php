@@ -1,4 +1,6 @@
 <?php
+require_once "InputValidator.php";
+
 
 class RequestController extends InputValidator
 {
