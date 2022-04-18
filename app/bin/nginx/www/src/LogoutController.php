@@ -1,13 +1,15 @@
 <?php
-require_once "../src/SessionController.php";
-class LogoutController{
+class LogoutController extends RequestController{
     static function Logout(){
-SessionController::LogoutSession();
+        if (SessionController::authenticate()){
+            SessionController::closeSession();
+        }
+        else{throw new Exception("Session did not exist");}
     
 
 
-//redirect
-header("Location: ../public/LoginForm.php");
+        //redirect
+        header("Location: ../public/LoginForm.php");
 }
 }
 

@@ -21,13 +21,20 @@ class SessionController{
                     $_SESSION['acctype'] = $acctype;
                 }
     }
-    static function LogoutSession(){
+    static function authenticate(){
         session_start();
         if (isset($_SESSION['acctype'])) {
             //a session exists
-            session_destroy(); //clear all session variables
+            return true;
         }
-        else{throw new Exception("Session did not exist");}
+        else{ 
+            return false;
+        }
+    }
+    static function closeSession(){
+        
+            session_destroy(); //clear all session variables
+        
     //redirect
     
     }
