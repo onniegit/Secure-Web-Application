@@ -1,12 +1,13 @@
 <?php
-//Access Control
 require_once "../src/SessionController.php";
+require_once "../src/DBConnector.php";
+//Access Control
 
 //session_start(); //required to bring session variables into context
 
 if (SessionController::ValidateEmail()) //check that session exists and is nonempty
 {
-    if (!SessionController::HasStudentRights()) //check if user is not student
+    if (!DBConnector::CheckRights($_SESSION['email'], basename(__FILE__))) //check if user is not student
     {
         http_response_code(403);
         die('Forbidden');

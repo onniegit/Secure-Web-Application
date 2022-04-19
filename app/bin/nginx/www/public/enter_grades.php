@@ -1,11 +1,12 @@
 <?php
+require_once "../src/DBConnector.php";
 //Access Control
 
 session_start(); //required to bring session variables into context
 
 if ((isset($_SESSION['email']) && !empty($_SESSION['email']))) //check that session exists and is nonempty
 {
-    if (!($_SESSION['acctype'] == 2)) //check if user is not faculty
+    if (!DBConnector::CheckRights($_SESSION['email'], basename(__FILE__))) //check if user is not faculty
     {
         http_response_code(403);
         die('Forbidden');
