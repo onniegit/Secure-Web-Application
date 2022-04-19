@@ -2,6 +2,8 @@
 require_once "../src/DBConnector.php";
 require_once "../src/User.php";
 require_once "../src/InputValidator.php";
+require_once "../src/RequestController.php";
+require_once "../src/SessionController.php";
 
 global $acctype;
 
@@ -19,7 +21,7 @@ class LoginController extends InputValidator
 
             if (LoginController::ValidateCredentials($uname,$User->GetEmail(),$pw,$User->GetPassword())==true) //Validate User's credentials
             {
-                $acctype = $User->GetAccType(); //determines which dashboard to present
+                /* $acctype = $User->GetAccType(); //determines which dashboard to present
 
                 if (isset($_SESSION))
                 {
@@ -36,11 +38,14 @@ class LoginController extends InputValidator
                     session_start();
                     $_SESSION['email'] = $uname;
                     $_SESSION['acctype'] = $acctype;
-                }
+                } */
+
+                SessionController::CreateSession($User, $uname, $pword);
 
                 //redirect
                 header("Location: ../public/dashboard.php");
             }
+            
 
             else // invalid user credentials
             {                

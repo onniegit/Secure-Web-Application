@@ -1,9 +1,6 @@
 <?php
-
-define("admin", 1);
-define("faculty", 2);
-define("student", 3);
-   class RedirectController
+    require_once "SessionController.php";
+   class RedirectController extends SessionController
    {
        public $ValidateLogin = 'isValid';
 
@@ -19,7 +16,7 @@ define("student", 3);
             return false;
         }
        }
-       function GetType()
+       /* function GetType()
        {
         session_start();
         if(isset($_SESSION['acctype']))
@@ -30,7 +27,7 @@ define("student", 3);
         {
             return -1;
         }
-       }
+       } */
    }
 
    global $rc;

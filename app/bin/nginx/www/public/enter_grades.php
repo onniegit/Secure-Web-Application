@@ -1,12 +1,13 @@
 <?php
 require_once "../src/EnterGradeControl.php";
+require_once "../src/DBConnector.php";
 
 //Access Control
 session_start(); //required to bring session variables into context
 
 /*function Authorize($role)
 {
-    if ($role == 2)
+    if (!DBConnector::CheckRights($_SESSION['email'], basename(__FILE__))) //check if user is not faculty
     {
         return true;
     }
@@ -53,8 +54,8 @@ if (Authorize($_SESSION['acctype']) == false)
 
         <!--Navigation Buttons-->
         <nav>
-            <button class="button_large" type="button" onclick="toDashboard();">Dashboard</button>
-            <button class="button_large" type="button" onclick="toLogout();">Log Out</button>
+            <button class="button_large" type="button" onclick="location.href = 'dashboard.php'">Dashboard</button>
+            <button class="button_large" type="button" location.href = 'dashboard.php'">Log Out</button>
         </nav>
 
         <main>
