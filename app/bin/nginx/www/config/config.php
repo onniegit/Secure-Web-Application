@@ -488,69 +488,24 @@ BEGIN TRANSACTION;
 	INSERT INTO Resource (ResourceName)
 		VALUES ('user_search.php');
 
-/*--------------Resource Values-----------------*/
+/*--------------AccessRight Values-----------------*/
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('1', '3');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('1', '4');
 	
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('1', '5');
 	
 	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('1', '7');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('1', '8');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('1', '9');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('1', '10');
-	
-	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('1', '11');
 	
 	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('2', '4');
-	
-	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('2', '6');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('2', '7');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('2', '8');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('2', '9');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('2', '10');
 	
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('3', '1');
 	
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('3', '2');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('3', '4');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('3', '7');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('3', '8');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('3', '9');
-	
-	INSERT INTO AccessRight (RoleId, rid)
-		VALUES ('3', '10');
 	
       	
       	END TRANSACTION;
