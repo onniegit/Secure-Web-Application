@@ -1,11 +1,12 @@
 <?php
 //Access Control
+require_once "../src/SessionController.php";
 
-session_start(); //required to bring session variables into context
+//session_start(); //required to bring session variables into context
 
-if (isset($_SESSION['email']) && !empty($_SESSION['email'])) //check that session exists and is nonempty
+if (SessionController::ValidateEmail()) //check that session exists and is nonempty
 {
-    if (!($_SESSION['acctype'] == 3)) //check if user is not student
+    if (!SessionController::HasStudentRights()) //check if user is not student
     {
         http_response_code(403);
         die('Forbidden');
@@ -46,8 +47,8 @@ else
 
         <!--Navigation Buttons-->
         <nav>
-            <button class="button_large" type="button" onclick="location.href = 'dashboard.php'">Dashboard</button>
-            <button class="button_large" type="button" onclick="location.href = '../src/logout.php'">Log Out</button>
+            <button class="button_large" type="button" onclick="toDashboard();">Dashboard</button>
+            <button class="button_large" type="button" onclick="toLogout();">Log Out</button>
         </nav>
 
         <main>

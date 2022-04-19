@@ -3,7 +3,7 @@
 require_once "../src/DashboardController.php";
 session_start(); //required to bring session variables into context
 
-if (!isset($_SESSION['email']) or (empty($_SESSION['email']))) //check that session exists and is nonempty
+if (!DashboardController::ValidateEmail()) //check that session exists and is nonempty
 {
     http_response_code(403);
     die('Forbidden');
@@ -18,19 +18,9 @@ if (!isset($_SESSION['email']) or (empty($_SESSION['email']))) //check that sess
     <script async src="../resources/nav.js"></script>
     <meta charset="utf-8" />
     <?php
-    $atype = $GLOBALS['rc']->GetType();
-      if($atype===admin) //admin
-      {
-          echo "<title>Secure ED. - Admin Dashboard</title>";
-      }
-      else if($atype===faculty) //faculty
-      {
-          echo "<title>Secure ED. - Faculty Dashboard</title>";
-      }
-      else if($atype===student) //student
-      {
-          echo "<title>Secure ED. - Student Dashboard</title>";
-      }
+
+      echo "<title>Secure ED. - Dashboard</title>";
+
       ?>
 
 </head>
@@ -50,12 +40,13 @@ if (!isset($_SESSION['email']) or (empty($_SESSION['email']))) //check that sess
 
       <!--Navigation Buttons-->
       <nav>
-          <button class="button_large" type="button" onclick="location.href = '../src/logout.php'">Log Out</button>
+          <button class="button_large" type="button" onclick="toLogout();">Log Out</button>
       </nav>
 
       <?php
 
-      DashboardController::Display();
+      //DashboardController::Display();
+      DashboardController::DisplayRights();
 
     ?>
   </div>
