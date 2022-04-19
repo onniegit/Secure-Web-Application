@@ -1,23 +1,30 @@
 <?php
-//Access Control
+require_once "../src/EnterGradeControl.php";
 
+//Access Control
 session_start(); //required to bring session variables into context
 
-if ((isset($_SESSION['email']) && !empty($_SESSION['email']))) //check that session exists and is nonempty
+/*function Authorize($role)
 {
-    if (!($_SESSION['acctype'] == 2)) //check if user is not faculty
+    if ($role == 2)
     {
-        http_response_code(403);
-        die('Forbidden');
+        return true;
     }
+
+    else return false;
 }
 
-else
+if (SessionControl::Authenticate(isset($_SESSION['email'])) == false)
 {
     http_response_code(403);
-    die('Forbidden');
+    die("No valid session.");
 }
 
+if (Authorize($_SESSION['acctype']) == false)
+{
+    http_response_code(403);
+    die("You are not permitted to access this function.");
+}*/
 ?>
 
 <!DOCTYPE html>

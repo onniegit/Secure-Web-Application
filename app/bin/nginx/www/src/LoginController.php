@@ -1,11 +1,11 @@
 <?php
 require_once "../src/DBConnector.php";
 require_once "../src/User.php";
-require_once "../src/RequestController.php";
+require_once "../src/InputValidator.php";
 
 global $acctype;
 
-class LoginController extends RequestController
+class LoginController extends InputValidator
 {
     public static function Login($un,$pw)
     {
@@ -17,7 +17,7 @@ class LoginController extends RequestController
 
             $User = DBConnector::GetUser($uname); //GetUser() -> User
 
-            if (LoginController::ValidateUser($uname,$User->GetEmail(),$pw,$User->GetPassword())==true) //Validate User
+            if (LoginController::ValidateCredentials($uname,$User->GetEmail(),$pw,$User->GetPassword())==true) //Validate User's credentials
             {
                 $acctype = $User->GetAccType(); //determines which dashboard to present
 
@@ -61,7 +61,7 @@ class LoginController extends RequestController
         else return false;
     }
     
-    function ValidateUser($un,$userUname,$pw,$userPword) // verifies correctness of username and password
+    function ValidateCredentials($un,$userUname,$pw,$userPword) // verifies correctness of username and password
     {
         $hashedInputPword = hash('ripemd256', $pw);
 

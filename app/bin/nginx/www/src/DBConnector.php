@@ -101,4 +101,21 @@ class DBConnector
 
         $GLOBALS['db']->backup($db, "temp", $GLOBALS['dbPath']);
     }
+
+    public static function SaveGrade($crn) // input has been validated before this method is called
+    {
+        $handle = fopen(($_FILES['file']['tmp_name']), "r"); //sets a read-only pointer at beginning of file
+        $path = pathinfo($_FILES['file']['name']); //path info for file
+
+
+        while (($data = fgetcsv($handle, 9001, ",")) !== FALSE)
+        {
+            $query = "INSERT INTO Grade VALUES ('$crn', '$data[0]', '$data[1]')";//create query for db
+            $GLOBALS['db']->exec($query);
+        }
+
+        $GLOBALS['db']->backup($GLOBALS['db'], "temp", $GLOBALS['dbPath']);
+
+        fclose($handle);
+    }
 }

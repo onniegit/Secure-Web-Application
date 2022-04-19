@@ -23,4 +23,22 @@ class InputValidator
     {
         return htmlspecialchars($input);
     }
+
+    function ValidateSID($sid) // returns true if student ID is in correct format
+    {
+        $sidFormat = '/^(?=.*[0-9]).{9}$/';
+
+        if(preg_match($sidFormat,$sid)==true) return true;
+
+        else return false;
+    }
+
+    function ValidateGrade($grade) // returns true if grade is in correct format
+    {
+        $gradeFormat = '/^[A-F]$/';
+
+        if(preg_match($gradeFormat,$grade)==true) return true;
+
+        else return false;
+    }
 }
