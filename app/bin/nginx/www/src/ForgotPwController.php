@@ -1,9 +1,9 @@
 <?php
 require_once "../src/DBConnector.php";
 require_once "../src/User.php";
-require_once "../src/InputValidator.php";
+require_once "../src/RequestController.php";
 
-class ForgotPwController extends InputValidator
+class ForgotPwController extends RequestController
 {   
     public static function ForgotPassword($un) // if provided username exists, redirects user to answer their security question
     {

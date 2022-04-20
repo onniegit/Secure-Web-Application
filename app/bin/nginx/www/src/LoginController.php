@@ -1,13 +1,11 @@
 <?php
 require_once "../src/DBConnector.php";
 require_once "../src/User.php";
-require_once "../src/InputValidator.php";
 require_once "../src/RequestController.php";
-require_once "../src/SessionController.php";
 
 global $acctype;
 
-class LoginController extends InputValidator
+class LoginController extends RequestController
 {
     public static function Login($un,$pw)
     {
@@ -40,7 +38,7 @@ class LoginController extends InputValidator
                     $_SESSION['acctype'] = $acctype;
                 } */
 
-                SessionController::CreateSession($User, $uname, $pword);
+                LoginController::CreateSession($User, $uname, $pword);
 
                 //redirect
                 header("Location: ../public/dashboard.php");

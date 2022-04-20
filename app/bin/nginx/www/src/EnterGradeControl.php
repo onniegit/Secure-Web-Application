@@ -1,11 +1,10 @@
 <?php
 require_once "../src/DBConnector.php";
-require_once "../src/User.php";
-require_once "../src/InputValidator.php";
+require_once "../src/RequestController.php";
 
 session_start(); //required to bring session variables into context
 
-class EnterGradeControl extends InputValidator
+class EnterGradeControl extends RequestController
 {
     function ValidateInput($crn) // validates crn and .csv files for correct format
     {
@@ -38,7 +37,7 @@ class EnterGradeControl extends InputValidator
                 }
 
                 // ensures student ID and grade are in correct format
-                if (InputValidator::ValidateSID($data[0])==false OR InputValidator::ValidateGrade($data[1])==false)
+                if (EnterGradeControl::ValidateSID($data[0])==false OR EnterGradeControl::ValidateGrade($data[1])==false)
                 {
                     http_response_code(403);
                     die("csv file is not in valid format.");
@@ -84,5 +83,4 @@ class EnterGradeControl extends InputValidator
     
             header("Location: ../public/dashboard.php");
         }
-
     }

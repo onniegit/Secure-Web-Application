@@ -1,6 +1,6 @@
 <?php
 
-class InputValidator
+trait InputValidator
 {
     function ValidateEmail($un) // returns true if input is in email format
     {

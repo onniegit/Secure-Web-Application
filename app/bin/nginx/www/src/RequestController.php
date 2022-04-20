@@ -1,8 +1,10 @@
 <?php
-require_once "InputValidator.php";
+require_once "../src/SessionController.php";
+require_once "../src/InputValidator.php";
 
 
-class RequestController extends InputValidator
+class RequestController extends SessionController
 {
+    use InputValidator;
     // extend this controller to access InputValidator and SessionController methods
 }
