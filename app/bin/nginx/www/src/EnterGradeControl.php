@@ -7,7 +7,7 @@ session_start(); //required to bring session variables into context
 
 class EnterGradeControl extends InputValidator
 {
-    function ValidateInput($crn) // sanitizes crn, returns false if not in correct format
+    function ValidateInput($crn) // validates crn and .csv files for correct format
     {
         if ($crn == false)
         {
@@ -26,7 +26,7 @@ class EnterGradeControl extends InputValidator
         }
 
         //insert data into the database if csv
-        if($path['extension'] == 'csv') //check if file is .csv
+        if($path['extension'] == 'csv')
         {
             while (($data = fgetcsv($handle, 9001, ",")) !== FALSE) //iterate through csv
             { 
@@ -69,15 +69,15 @@ class EnterGradeControl extends InputValidator
             //get info about the file
             $filename = $_FILES['file']['name'];
             $filetmp  = $_FILES['file']['tmp_name'];
-            $sanitizedCrn = filter_var($crn, FILTER_VALIDATE_INT);
+            $sanitizedCrn = filter_var($crn, FILTER_VALIDATE_INT); // sanitizes crn, returns false if not in correct format
+
+            EnterGradeControl::ValidateInput($sanitizedCrn); // see above, parses csv and validates input
     
             //create the upload path with the original filename
             $uploadPath = $currentDirectory . $uploadDirectory . basename($filename);
     
             //copy file to uploads folder
             copy($filetmp, $uploadPath);
-    
-            EnterGradeControl::ValidateInput($sanitizedCrn); // see above, parses csv and validates input
 
             // if all validation has passed, input will be saved in the database
             DBConnector::SaveGrade($sanitizedCrn);
