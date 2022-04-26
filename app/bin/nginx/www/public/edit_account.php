@@ -252,7 +252,7 @@ else
                                     <label class = "edit_acc_label"> Password: </label>
                                 </td>
                                 <td>
-                                    <input type="password" name="password" id="password" value="<?php if(!$error){echo "$userinfo[2]";} ?>">
+                                    <input type="password" name="password" id="password" value="">
                                 </td>
 
                                 <!--Blank-->
@@ -268,7 +268,7 @@ else
                                     <label class = "edit_acc_label"> Confirm Password: </label>
                                 </td>
                                 <td>
-                                    <input type="password" name="confirmpassword" id="confirmpassword" value="<?php if(!$error){echo "$userinfo[2]";} ?>">
+                                    <input type="password" name="confirmpassword" id="confirmpassword" value="">
                                 </td>
 
                                 <!--Blank-->
