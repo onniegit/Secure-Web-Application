@@ -59,10 +59,7 @@ catch(Exception $e)
                              echo "<p>There was a problem. Ensure you fill both boxes, your new password meets the complexity requirement, and both passwords match.</p>";
                          }
 
-                         else
-                         {
-                             echo "<p>Please enter your new password below. It must be between 8 and 20 characters and contain at least one capital letter, one lowercase letter, one number, and one of the following specials symbols: ! @ # $ % ^ & * </p>";
-                         }
+                         echo "<p>Please enter your new password below. It must be between 8 and 20 characters and contain at least one capital letter, one lowercase letter, one number, and one of the following specials symbols: ! @ # $ % ^ & * </p>";
                 ?>
                 </div>
 
