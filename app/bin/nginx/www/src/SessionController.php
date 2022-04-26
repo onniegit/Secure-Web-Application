@@ -120,6 +120,16 @@ class SessionController{
             return false;
         }
     }
+    static function authorize($un, $res){
+        if (DBConnector::CheckRights($un, $res))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     static function closeSession(){
         
             session_destroy(); //clear all session variables
