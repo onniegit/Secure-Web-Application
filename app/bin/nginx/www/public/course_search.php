@@ -7,7 +7,7 @@ require_once "../src/DBConnector.php";
 
 if (SessionController::ValidateEmail()) //check that session exists and is nonempty
 {
-    if (!DBConnector::CheckRights(/*$_SESSION['email']*/SessionController::GetEmail(), basename(__FILE__))) //check if user is not student
+    if (!DBConnector::CheckRights(SessionController::GetEmail(), basename(__FILE__))) //check if user is not student
     {
         http_response_code(403);
         die('Forbidden');

@@ -7,7 +7,7 @@ session_start(); //required to bring session variables into context
 
 if (SessionController::ValidateEmail()) //check that session exists and is nonempty
 {
-    if (!DBConnector::CheckRights(/*$_SESSION['email']*/SessionController::GetEmail(), basename(__FILE__))) //check if user is not admin
+    if (!DBConnector::CheckRights(SessionController::GetEmail(), basename(__FILE__))) //check if user is not admin
     {
         http_response_code(403);
         die('Forbidden');
