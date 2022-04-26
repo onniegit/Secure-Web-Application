@@ -7,7 +7,7 @@ session_start(); //required to bring session variables into context
 
 /*function Authorize($role)
 {
-    if (!DBConnector::CheckRights($_SESSION['email'], basename(__FILE__))) //check if user is not faculty
+    if (!DBConnector::CheckRights(SessionController::GetEmail(), basename(__FILE__))) //check if user is not faculty
     {
         return true;
     }
