@@ -5,7 +5,7 @@ require_once "../src/DBConnector.php";
 //Access Control
 session_start(); //required to bring session variables into context
 
-/*function Authorize($role)
+function Authorize($role)
 {
     if (!DBConnector::CheckRights(SessionController::GetEmail(), basename(__FILE__))) //check if user is not faculty
     {
@@ -25,7 +25,7 @@ if (Authorize($_SESSION['acctype']) == false)
 {
     http_response_code(403);
     die("You are not permitted to access this function.");
-}*/
+}
 ?>
 
 <!DOCTYPE html>
