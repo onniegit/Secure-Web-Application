@@ -1,6 +1,6 @@
 <?php
 try {
-    $GLOBALS['dbPath'] = 'bin/nginx/www/db/persistentconndb.sqlite';
+    $GLOBALS['dbPath'] = 'bin/nginx/db/persistentconndb.sqlite';
 
     $db = new SQLite3($GLOBALS['dbPath'], $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, $encryptionKey = "");
 

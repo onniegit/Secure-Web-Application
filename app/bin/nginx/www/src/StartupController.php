@@ -8,7 +8,7 @@ loadConfig();
 
 function clearDB() 
 {
-    $GLOBALS['dbPath'] = 'bin/nginx/www/db/persistentconndb.sqlite';
+    $GLOBALS['dbPath'] = 'bin/nginx/db/persistentconndb.sqlite';
 
     if(file_exists($GLOBALS['dbPath'])) {
         unlink($GLOBALS['dbPath']);
