@@ -54,7 +54,7 @@ class SessionController{
             return -1;
         }
     }
-    static function ValidateEmail()
+    function ValidateEmail()
     {
         session_start(); //required to bring session variables into context
 
@@ -64,7 +64,7 @@ class SessionController{
         }
         else {return true;}
     } 
-    static function GetEmail()
+    function GetEmail()
     {
         session_start(); //required to bring session variables into context
 
