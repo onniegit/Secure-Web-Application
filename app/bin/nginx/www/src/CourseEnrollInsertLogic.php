@@ -1,4 +1,5 @@
 <?php
+require_once "../src/SessionController.php";
 try{
     session_start();
 
@@ -7,7 +8,7 @@ try{
 
     /*Get information from the search (post) request*/
     $courseid = $_POST['courseid'];
-    $email = strtolower($_SESSION['email']);
+    $email = strtolower(SessionController::GetEmail());
 
     if($courseid==null)
     {throw new Exception("input did not exist");}

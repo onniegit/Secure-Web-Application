@@ -64,6 +64,16 @@ class SessionController{
         }
         else {return true;}
     } 
+    function GetEmail()
+    {
+        session_start(); //required to bring session variables into context
+
+        if (!isset($_SESSION['email']) or (empty($_SESSION['email']))) //check that session exists and is nonempty
+        {
+            return "empty";
+        }
+        else {return $_SESSION['email'];}
+    }
     function HasStudentRights()
     {
         session_start();
