@@ -5,27 +5,21 @@ require_once "../src/DBConnector.php";
 //Access Control
 session_start(); //required to bring session variables into context
 
-function Authorize($role)
+if (SessionController::ValidateEmail()) //check that session exists and is nonempty
 {
-    if (!DBConnector::CheckRights(SessionController::GetEmail(), basename(__FILE__))) //check if user is not faculty
+    if (!DBConnector::CheckRights(SessionController::GetEmail(), basename(__FILE__))) //check if user is not admin
     {
-        return true;
+        http_response_code(403);
+        die('Forbidden');
     }
-
-    else return false;
 }
 
-if (SessionControl::Authenticate(isset($_SESSION['email'])) == false)
+else
 {
     http_response_code(403);
-    die("No valid session.");
+    die('Forbidden');
 }
 
-if (Authorize($_SESSION['acctype']) == false)
-{
-    http_response_code(403);
-    die("You are not permitted to access this function.");
-}
 ?>
 
 <!DOCTYPE html>
