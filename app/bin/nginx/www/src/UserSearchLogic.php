@@ -1,7 +1,7 @@
 <?php
 try {
     /*Get DB connection*/
-    require_once "../src/DBController.php";
+    require_once "../src/DBConnector.php";
 
     /*Get information from the search (post) request*/
     $acctype = $_POST['acctype'];
@@ -38,13 +38,13 @@ try {
 
     //determine account type
     if($acctype=="Student") {
-        $results=usersearchstudent($db,$studentyear,$fname,$lname,$dob,$email);
+        $results = DBConnector::usersearchstudent($db,$studentyear,$fname,$lname,$dob,$email);
     }
     elseif($acctype=="Faculty"){
-        $results=usersearchfaculty($db,$facultyrank,$fname,$lname,$dob,$email);
+        $results = DBConnector::usersearchfaculty($db,$facultyrank,$fname,$lname,$dob,$email);
     }
     else{
-        $results = gensearch($db,$fname,$lname,$dob,$email,$facultyrank);
+        $results = DBConnector::gensearch($db,$fname,$lname,$dob,$email,$facultyrank);
     }
 
 
