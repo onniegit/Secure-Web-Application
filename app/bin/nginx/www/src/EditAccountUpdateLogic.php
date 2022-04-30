@@ -1,12 +1,14 @@
 <?php
+require_once "../src/RequestController.php";
+
 try {
     /*Get DB connection*/
-    require_once "../src/DBController.php";
+    require_once "../src/DBConnector.php";
 
     /*Get information from the search (post) request*/
     $acctype = $_POST['acctype'];
-    $password = hash('ripemd256', $_POST['password']); //convert password to 80 byte hash using ripemd256 before saving
-    $fname = htmlentities($_POST['fname']);
+    $password = $_POST['password'];
+    $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $dob = $_POST['dob']; //date obtained is already UTC
     $email = strtolower($_POST['email']); //is converted to lower
@@ -15,6 +17,25 @@ try {
     $squestion = $_POST['squestion'];
     $sanswer = $_POST['sanswer'];
     $prevemail = $_POST['prevemail']; //required to find the user being updated
+
+    /*Validate Input*/
+    if (ValidateInput($email, $password))
+    {
+        /*Prevent XSS*/
+        $password = RequestController::XssValidation($password);
+        $fname = RequestController::XssValidation($fname);
+        $lname = RequestController::XssValidation($lname);
+        $squestion = RequestController::XssValidation($squestion);
+        $sanswer = RequestController::XssValidation($sanswer);
+        $prevemail = RequestController::XssValidation($prevemail);
+    }
+    else
+    {
+        throw new Exception("invalid input");
+    }
+    
+
+    $password = hash('ripemd256', $password); //convert password to 80 byte hash using ripemd256 before saving
 
 
     if($acctype==null)
@@ -87,3 +108,11 @@ catch(Exception $e)
     $allVars = get_defined_vars();
     debug_zval_dump($allVars);
 }
+
+function ValidateInput($un,$pw) // validates input for format
+    {
+        if(RequestController::ValidateEmail($un)==true AND RequestController::ValidatePassword($pw)==true) 
+            return true;
+
+        else return false;
+    }

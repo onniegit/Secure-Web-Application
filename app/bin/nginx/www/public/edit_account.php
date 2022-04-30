@@ -26,7 +26,7 @@ else
 //This php code gets the selected users info from the database for display
 
 /*Get DB connection*/
-require_once "../src/DBController.php";
+require_once "../src/DBConnector.php";
 
 /*Get information from the post request*/
 
