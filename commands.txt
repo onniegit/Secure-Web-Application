@@ -1,0 +1,7 @@
+// Powershell self-signed certificate commands
+
+To run Powershell as admin:
+powershell Start-Process powershell -Verb runAs
+
+To create SecureED's certificate:
+New-SelfSignedCertificate -Subject "SecureED" -TextExtension @("2.5.29.17={text}DNS=localhost&IPAddress=127.0.0.1&IPAddress=::1") -CertStoreLocation "cert:\CurrentUser\My" -NotAfter (Get-Date).AddYears(50)
