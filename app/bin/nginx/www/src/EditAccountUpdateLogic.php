@@ -19,7 +19,7 @@ try {
     $prevemail = $_POST['prevemail']; //required to find the user being updated
 
     /*Validate Input*/
-    if (ValidateEmail($email))
+    if (RequestController::ValidateEmail($email))
     {
 
     }
@@ -29,7 +29,7 @@ try {
     }
 
     /*Validate Input*/
-    if (ValidatePassword($password))
+    if (RequestController::ValidatePassword($password))
     {
 
     }
@@ -39,7 +39,17 @@ try {
     }
 
     /*Validate Input*/
-    if (ValidateName($fname))
+    if (RequestController::ValidateName($fname))
+    {
+
+    }
+    else
+    {
+        throw new Exception("Invalid name");
+    }
+
+    /*Validate Input*/
+    if (RequestController::ValidateName($lname))
     {
 
     }
@@ -123,28 +133,4 @@ catch(Exception $e)
 
     //Display error information
     echo 'Caught exception: ',  $e->getMessage(), "<br>";
-}
-
-function ValidateEmail($un) // validates input for email format
-{
-    if(RequestController::ValidateEmail($un)) 
-        return true;
-
-    else return false;
-}
-
-function ValidatePassword($pw) // validates input for password format
-{
-    if(RequestController::ValidatePassword($pw)) 
-        return true;
-
-    else return false;
-}
-
-function ValidateName($name)
-{
-    if(RequestController::ValidateName($name)) // validates input for name format
-        return true;
-
-    else return false;
 }
