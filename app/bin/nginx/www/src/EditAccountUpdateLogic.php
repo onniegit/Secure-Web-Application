@@ -25,7 +25,7 @@ try {
     }
     else
     {
-        throw new Exception("Error: Invalid email");
+        throw new Exception("Invalid email");
     }
 
     /*Validate Input*/
@@ -35,7 +35,7 @@ try {
     }
     else
     {
-        throw new Exception("Error: Invalid password");
+        throw new Exception("Invalid password");
     }
 
     /*Validate Input*/
@@ -45,7 +45,7 @@ try {
     }
     else
     {
-        throw new Exception("Error: Invalid name");
+        throw new Exception("Invalid name");
     }
     
     /*Prevent XSS*/
@@ -123,11 +123,6 @@ catch(Exception $e)
 
     //Display error information
     echo 'Caught exception: ',  $e->getMessage(), "<br>";
-    var_dump($e->getTraceAsString());
-    echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
-
-    $allVars = get_defined_vars();
-    debug_zval_dump($allVars);
 }
 
 function ValidateEmail($un) // validates input for email format
