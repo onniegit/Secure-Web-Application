@@ -19,21 +19,42 @@ try {
     $prevemail = $_POST['prevemail']; //required to find the user being updated
 
     /*Validate Input*/
-    if (ValidateInput($email, $password))
+    if (ValidateEmail($email))
     {
-        /*Prevent XSS*/
-        $password = RequestController::XssValidation($password);
-        $fname = RequestController::XssValidation($fname);
-        $lname = RequestController::XssValidation($lname);
-        $squestion = RequestController::XssValidation($squestion);
-        $sanswer = RequestController::XssValidation($sanswer);
-        $prevemail = RequestController::XssValidation($prevemail);
+
     }
     else
     {
-        throw new Exception("invalid input");
+        throw new Exception("Error: Invalid email");
+    }
+
+    /*Validate Input*/
+    if (ValidatePassword($password))
+    {
+
+    }
+    else
+    {
+        throw new Exception("Error: Invalid password");
+    }
+
+    /*Validate Input*/
+    if (ValidateName($fname))
+    {
+
+    }
+    else
+    {
+        throw new Exception("Error: Invalid name");
     }
     
+    /*Prevent XSS*/
+    $password = RequestController::XssValidation($password);
+    $fname = RequestController::XssValidation($fname);
+    $lname = RequestController::XssValidation($lname);
+    $squestion = RequestController::XssValidation($squestion);
+    $sanswer = RequestController::XssValidation($sanswer);
+    $prevemail = RequestController::XssValidation($prevemail);
 
     $password = hash('ripemd256', $password); //convert password to 80 byte hash using ripemd256 before saving
 
@@ -109,10 +130,26 @@ catch(Exception $e)
     debug_zval_dump($allVars);
 }
 
-function ValidateInput($un,$pw) // validates input for format
-    {
-        if(RequestController::ValidateEmail($un)==true AND RequestController::ValidatePassword($pw)==true) 
-            return true;
+function ValidateEmail($un) // validates input for email format
+{
+    if(RequestController::ValidateEmail($un)) 
+        return true;
 
-        else return false;
-    }
+    else return false;
+}
+
+function ValidatePassword($pw) // validates input for password format
+{
+    if(RequestController::ValidatePassword($pw)) 
+        return true;
+
+    else return false;
+}
+
+function ValidateName($name)
+{
+    if(RequestController::ValidateName($name)) // validates input for name format
+        return true;
+
+    else return false;
+}
