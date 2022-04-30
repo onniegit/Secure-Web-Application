@@ -1,9 +1,9 @@
 <?php
 //Access Control
-require_once "../src/DashboardController.php";
+require_once "../src/Dashboard.php";
 session_start(); //required to bring session variables into context
 
-if (!DashboardController::ValidateEmail()) //check that session exists and is nonempty
+if (!Dashboard::ValidateEmail()) //check that session exists and is nonempty
 {
     http_response_code(403);
     die('Forbidden');
@@ -45,8 +45,8 @@ if (!DashboardController::ValidateEmail()) //check that session exists and is no
 
       <?php
 
-      //DashboardController::Display();
-      DashboardController::DisplayRights();
+      //Dashboard::Display();
+      Dashboard::LoadPage();
 
     ?>
   </div>

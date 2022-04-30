@@ -1,5 +1,6 @@
 <?php
 require_once "User.php";
+require_once "../src/DBConnector.php";
 
 define("admin", 1);
 define("faculty", 2);

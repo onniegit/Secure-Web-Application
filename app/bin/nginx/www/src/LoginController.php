@@ -19,29 +19,13 @@ class LoginController extends RequestController
 
             if (LoginController::ValidateCredentials($uname,$User->GetEmail(),$pw,$User->GetPassword())==true) //Validate User's credentials
             {
-                /* $acctype = $User->GetAccType(); //determines which dashboard to present
-
-                if (isset($_SESSION))
-                {
-                    //a session already existed
-                    session_destroy();
-                    session_start();
-                    $_SESSION['email'] = $uname;
-                    $_SESSION['acctype'] = $acctype;
-                } 
-                
-                else
-                {
-                    //a session did not exist
-                    session_start();
-                    $_SESSION['email'] = $uname;
-                    $_SESSION['acctype'] = $acctype;
-                } */
-
                 LoginController::CreateSession($User, $uname, $pword);
 
+                if (LoginController::Authenticate(isset($_SESSION)==true AND DBConnector::CheckRights($uname,10)==true))
+                {
                 //redirect
                 header("Location: ../public/dashboard.php");
+                }
             }
             
 
