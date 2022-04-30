@@ -19,6 +19,16 @@ trait InputValidator
         else return false;
     }
 
+    function ValidateName($name) // returns true if input in correct format for names
+    {
+        // Blacklists special characters and name cannot have two or more consecutive spaces
+        $nameFormat = "/([\^\<\,\"\@\/\\\{\}\(\)\*\$\%\?\=\>\:\|\;\#]| {2,})/";
+
+        if(preg_match($nameFormat, $name)==true) return false;
+
+        else return true;
+    }
+
     function XssValidation($input) // applies in-built php method to input to prevent XSS
     {
         return htmlspecialchars($input);
