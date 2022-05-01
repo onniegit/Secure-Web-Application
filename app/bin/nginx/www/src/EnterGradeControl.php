@@ -48,20 +48,7 @@ class EnterGradeControl extends RequestController
     }
 
         function EnterGrade($session, $crn)
-        {
-            // access control will need to be updated
-            /*if (SessionControl::Authenticate($session) == false)
-            {
-                http_response_code(403);
-                die("No valid session.");
-            }
-    
-            if (EnterGradeControl::Authorize($_SESSION['acctype']) == false)
-            {
-                http_response_code(403);
-                die("You are not permitted to access this function.");
-            }*/
-    
+        {   
             $currentDirectory = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');//get root directory
             $uploadDirectory = "\uploads\\";
     
