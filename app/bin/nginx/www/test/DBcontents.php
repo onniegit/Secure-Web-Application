@@ -40,7 +40,10 @@ require_once "../src/DBConnector.php";
                     <a href="#sectioncontents"><button>To Section</button></a>
                     <a href="#enrollmentcontents"><button>To Enrollment</button></a>
                     <a href="#gradecontents"><button>To Grade</button></a>
-                    <a href="#rolecontents"><button>To Role</button></a>';
+                    <a href="#rolecontents"><button>To Role</button></a>
+                    <a href="#userrolecontents"><button>To UserRole</button></a>
+                    <a href="#resourcecontents"><button>To Resource</button></a>
+                    <a href="#accessrightcontents"><button>To AccessRight</button></a>';
 
             //get user table from db
             $sql =<<<EOF
@@ -55,7 +58,6 @@ require_once "../src/DBConnector.php";
             {
                 echo "<p> UserID = " . $row['UserID'] . "\n</p>";
                 echo "<p>Email = " . $row['Email'] . "\n</p>";
-                echo "<p>AccType = " . $row['AccType'] . "\n</p>";
                 echo "<p>Password = " . $row['Password'] . "\n</p>";
                 echo "<p>Name = " . $row['FName'] . ',' . $row['LName'] . "\n</p>";
                 echo "<p>DOB = " . $row['DOB'] . "\n</p>";
@@ -156,6 +158,57 @@ require_once "../src/DBConnector.php";
             {
                 echo "<p>Role ID = " . $row['RoleID'] . "\n</p>";
                 echo "<p>Role = " . $row['Role'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
+            }
+            echo '<a href="#""><button>Top</button></a>';
+
+            //get UserRole table from db
+            $sql =<<<EOF
+            Select * From UserRole;
+            EOF;
+            $ret = $db->query($sql);
+
+            //display UserRole table
+            echo "<a id='userrolecontents'></a>";
+            echo "<h1>UserRole Table Contents</h1>";
+            while($row = $ret->fetchArray(SQLITE3_ASSOC) )
+            {
+                echo "<p>User ID = " . $row['uid'] . "\n</p>";
+                echo "<p>Role = " . $row['AccType'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
+            }
+            echo '<a href="#""><button>Top</button></a>';
+
+            //get Resource table from db
+            $sql =<<<EOF
+            Select * From Resource;
+            EOF;
+            $ret = $db->query($sql);
+
+            //display Resource table
+            echo "<a id='resourcecontents'></a>";
+            echo "<h1>Resource Table Contents</h1>";
+            while($row = $ret->fetchArray(SQLITE3_ASSOC) )
+            {
+                echo "<p>Resource ID = " . $row['ResourceID'] . "\n</p>";
+                echo "<p>Resource Name = " . $row['ResourceName'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
+            }
+            echo '<a href="#""><button>Top</button></a>';
+
+            //get Resource table from db
+            $sql =<<<EOF
+            Select * From AccessRight;
+            EOF;
+            $ret = $db->query($sql);
+
+            //display AccessRight table
+            echo "<a id='accessrightcontents'></a>";
+            echo "<h1>AccessRight Table Contents</h1>";
+            while($row = $ret->fetchArray(SQLITE3_ASSOC) )
+            {
+                echo "<p>Role ID = " . $row['RoleId'] . "\n</p>";
+                echo "<p>Resource ID = " . $row['rid'] . "\n</p>";
                 echo "<div class=horizontal_line><hr></div>";
             }
             echo '<a href="#""><button>Top</button></a>';
