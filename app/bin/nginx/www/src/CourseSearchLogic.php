@@ -1,7 +1,7 @@
 <?php
 try {
     /*Get DB connection*/
-    require_once "../src/DBController.php";
+    require_once "../src/DBConnector.php";
 
     /*Get information from the search (post) request*/
     $courseid = $_POST['courseid'];

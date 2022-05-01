@@ -26,7 +26,7 @@ else
 //This php code gets all the sections of a given course from course search
 
 /*Get DB connection*/
-require_once "../src/DBController.php";
+require_once "../src/DBConnector.php";
 
 /*Get information from the post request*/
 $coursename = $_POST['coursename'];
