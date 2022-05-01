@@ -50,7 +50,7 @@ class EnterGradeControl extends RequestController
         function EnterGrade($session, $crn)
         {   
             $currentDirectory = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');//get root directory
-            $uploadDirectory = "\uploads\\";
+            $uploadDirectory = "\..\uploads\\";
     
             //get info about the file
             $filename = $_FILES['file']['name'];
