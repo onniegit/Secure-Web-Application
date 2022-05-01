@@ -1,56 +1,13 @@
 <?php
-//Access Control
-//echo "Before session started <br>";
-session_start(); //required to bring session variables into context
-//echo "Session started <br>";
+require_once "../src/RequestController.php";
 
-//echo "Before if 1 <br>";
-
-//echo $_SESSION['email'];
-//echo "<br>";
-
-if (isset($_SESSION['email']))
-{
-    //echo "Session is set <br>";
-    if (!empty($_SESSION['email']))
-    {
-        //echo "Email is non-empty <br>";
-        if (!($_SESSION['acctype'] == 1)) //check if user is not admin
-        {
-            //echo "User is not admin <br>";
-            http_response_code(403);
-            die('Forbidden');
-        }
-        else
-        {
-            //echo "User is admin <br>";
-        }
-    }
-    else
-    {
-        //echo "Email is empty <br>";
-    }
-}
-
-//check that session exists and is nonempty
-
-else
-{
-    //echo "Session is not set. <br>";
-    http_response_code(403);
-    die('Forbidden');
-}
-
-?>
-
-<?php
 try {
     /*Get DB connection*/
     require_once "../src/DBConnector.php";
 
     /*Get information from the search (post) request*/
     $acctype = $_POST['acctype'];
-    $password = hash('ripemd256', $_POST['password']); //convert password to 80 byte hash using ripemd256 before saving
+    $password = $_POST['password'];
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $dob = $_POST['dob']; //is already UTC
@@ -62,6 +19,40 @@ try {
 
     if($acctype==null)
     {throw new Exception("input did not exist");}
+
+    /*Validate Input*/
+    if (RequestController::ValidateEmail($email) == false)
+    {
+        throw new Exception("Invalid email");
+    }
+
+    /*Validate Input*/
+    if (RequestController::ValidatePassword($password) == false)
+    {
+        throw new Exception("Invalid password");
+    }
+
+    /*Validate Input*/
+    if (RequestController::ValidateName($fname) == false)
+    {
+        throw new Exception("Invalid name");
+    }
+
+    /*Validate Input*/
+    if (RequestController::ValidateName($lname) == false)
+    {
+        throw new Exception("Invalid name");
+    }
+
+    /*Prevent XSS*/
+    $password = RequestController::XssValidation($password);
+    $fname = RequestController::XssValidation($fname);
+    $lname = RequestController::XssValidation($lname);
+    $squestion = RequestController::XssValidation($squestion);
+    $sanswer = RequestController::XssValidation($sanswer);
+    $prevemail = RequestController::XssValidation($prevemail);
+
+    $password = hash('ripemd256', $password); //convert password to 80 byte hash using ripemd256 before saving
 
     /*Checking studentyear and facultyrank*/
     if ($acctype === "3") {
