@@ -18,6 +18,9 @@ try {
     $sanswer = $_POST['sanswer'];
     $prevemail = $_POST['prevemail']; //required to find the user being updated
 
+    if($acctype==null)
+    {throw new Exception("input did not exist");}
+
     /*Validate Input*/
     if (RequestController::ValidateEmail($email) == false)
     {
@@ -51,10 +54,6 @@ try {
     $prevemail = RequestController::XssValidation($prevemail);
 
     $password = hash('ripemd256', $password); //convert password to 80 byte hash using ripemd256 before saving
-
-
-    if($acctype==null)
-    {throw new Exception("input did not exist");}
 
     /*Checking studentyear and facultyrank*/
     if ($acctype === "3") {
