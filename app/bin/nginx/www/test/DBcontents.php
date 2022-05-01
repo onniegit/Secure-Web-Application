@@ -1,6 +1,6 @@
 <?php
 /*Get DB connection*/
-require_once "../src/DBController.php";
+require_once "../src/DBConnector.php";
 ?>
 
 <!DOCTYPE html>
@@ -63,6 +63,7 @@ require_once "../src/DBController.php";
                 echo "<p>Rank = " . $row['Rank'] . "\n</p>";
                 echo "<p>Security Question = " . $row['SQuestion'] . "\n</p>";
                 echo "<p>Security Answer = " . $row['SAnswer'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
             }
             echo '<a href="#""><button>Top</button></a>';
 
@@ -79,6 +80,7 @@ require_once "../src/DBController.php";
             {
                 echo "<p>Code = " . $row['Code'] . "\n</p>";
                 echo "<p>CourseName = " . $row['CourseName'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
             }
             echo '<a href="#""><button>Top</button></a>';
 
@@ -102,6 +104,7 @@ require_once "../src/DBController.php";
                 echo "<p>EndTime = " . $row['EndTime'] . "\n</p>";
                 echo "<p>Year = " . $row['Year'] . "\n</p>";
                 echo "<p>Location = " . $row['Location'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
             }
             echo '<a href="#""><button>Top</button></a>';
 
@@ -118,6 +121,7 @@ require_once "../src/DBController.php";
             {
                 echo "<p>CRN = " . $row['CRN'] . "\n</p>";
                 echo "<p>StudentID = " . $row['StudentID'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
             }
             echo '<a href="#""><button>Top</button></a>';
 
@@ -135,6 +139,7 @@ require_once "../src/DBController.php";
                 echo "<p>CRN = " . $row['CRN'] . "\n</p>";
                 echo "<p>StudentID = " . $row['StudentID'] . "\n</p>";
                 echo "<p>Grade = " . $row['Grade'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
             }
             echo '<a href="#""><button>Top</button></a>';
 
@@ -151,6 +156,7 @@ require_once "../src/DBController.php";
             {
                 echo "<p>Role ID = " . $row['RoleID'] . "\n</p>";
                 echo "<p>Role = " . $row['Role'] . "\n</p>";
+                echo "<div class=horizontal_line><hr></div>";
             }
             echo '<a href="#""><button>Top</button></a>';
             ?>
