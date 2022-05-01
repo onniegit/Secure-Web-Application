@@ -19,41 +19,25 @@ try {
     $prevemail = $_POST['prevemail']; //required to find the user being updated
 
     /*Validate Input*/
-    if (RequestController::ValidateEmail($email))
-    {
-
-    }
-    else
+    if (RequestController::ValidateEmail($email) == false)
     {
         throw new Exception("Invalid email");
     }
 
     /*Validate Input*/
-    if (RequestController::ValidatePassword($password))
-    {
-
-    }
-    else
+    if (RequestController::ValidatePassword($password) == false)
     {
         throw new Exception("Invalid password");
     }
 
     /*Validate Input*/
-    if (RequestController::ValidateName($fname))
-    {
-
-    }
-    else
+    if (RequestController::ValidateName($fname) == false)
     {
         throw new Exception("Invalid name");
     }
 
     /*Validate Input*/
-    if (RequestController::ValidateName($lname))
-    {
-
-    }
-    else
+    if (RequestController::ValidateName($lname) == false)
     {
         throw new Exception("Invalid name");
     }
