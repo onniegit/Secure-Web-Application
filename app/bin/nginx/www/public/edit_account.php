@@ -324,14 +324,12 @@ else
                             </tr>
                             </tbody>
                         </table>
-                        
+                    </form>  
                 </div>
-
-                        <div style="text-align: left;">
-                            <input type="submit" value="Submit" onclick="submitAccount()">&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="button" value="Cancel" onclick=" location.href = 'user_search.php'">
-                        </div>
-                    </form>
+                <div style="text-align: left;">
+                    <input type="submit" value="Submit" onclick="submitAccount()">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" value="Cancel" onclick=" location.href = 'user_search.php'">
+                </div>
             </div>
         </main>
     </div>
