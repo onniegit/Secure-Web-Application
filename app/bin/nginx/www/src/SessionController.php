@@ -86,14 +86,6 @@ class SessionController{
         {
             return false;
         }
-/*         if(isset($_SESSION['acctype']) && $_SESSION['acctype'] == student)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        } */
     }
     function HasAdminRights()
     {
@@ -118,14 +110,6 @@ class SessionController{
         {
             return false;
         }
-/*         if(isset($_SESSION['acctype']) && $_SESSION['acctype'] == faculty)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        } */
     }
     static function authenticate(){
         session_start();
