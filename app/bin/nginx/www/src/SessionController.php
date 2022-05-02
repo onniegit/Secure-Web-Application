@@ -78,7 +78,7 @@ class SessionController{
     function HasStudentRights()
     {
         session_start();
-        if(isset($_SESSION['acctype']) && $_SESSION['acctype'] == student)
+        if(SessionController::authorize(SessionController::GetEmail(), "course_search.php"))
         {
             return true;
         }
@@ -86,11 +86,19 @@ class SessionController{
         {
             return false;
         }
+/*         if(isset($_SESSION['acctype']) && $_SESSION['acctype'] == student)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        } */
     }
     function HasAdminRights()
     {
         session_start();
-        if(isset($_SESSION['acctype']) && $_SESSION['acctype'] == admin)
+        if(SessionController::authorize(SessionController::GetEmail(), "create_account.php"))
         {
             return true;
         }
@@ -102,7 +110,7 @@ class SessionController{
     function HasFacultyRights()
     {
         session_start();
-        if(isset($_SESSION['acctype']) && $_SESSION['acctype'] == faculty)
+        if(SessionController::authorize(SessionController::GetEmail(), "enter_grades.php"))
         {
             return true;
         }
@@ -110,6 +118,14 @@ class SessionController{
         {
             return false;
         }
+/*         if(isset($_SESSION['acctype']) && $_SESSION['acctype'] == faculty)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        } */
     }
     static function authenticate(){
         session_start();
