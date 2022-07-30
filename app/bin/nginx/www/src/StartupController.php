@@ -27,7 +27,8 @@ public static function start()
     StartupController::clearDB();
     StartupController::clearUploads();
     StartupController::loadConfig();
-    //dashboard is launched from the batch file 
+    //launch loginForm
+    //currently launched from the batch file
 }
 
 }
