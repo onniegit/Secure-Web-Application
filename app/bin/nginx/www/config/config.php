@@ -1,4 +1,5 @@
 <?php
+
 try {
     $GLOBALS['dbPath'] = 'bin/nginx/db/persistentconndb.sqlite';
 
@@ -31,8 +32,10 @@ try {
         $count++;
     }
 
-    $sql = <<<EOF
+	$sql = <<<EOF
       
+
+
 CREATE TABLE User
       	(
 	UserID	    	INT	    PRIMARY KEY     NOT NULL	UNIQUE,
@@ -491,6 +494,9 @@ BEGIN TRANSACTION;
 /*--------------AccessRight Values-----------------*/
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('1', '3');
+
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('1', '10');
 	
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('1', '5');
@@ -500,38 +506,43 @@ BEGIN TRANSACTION;
 	
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('2', '6');
+
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('2', '10');
 	
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('3', '1');
 	
 	INSERT INTO AccessRight (RoleId, rid)
 		VALUES ('3', '2');
-	
+
+	INSERT INTO AccessRight (RoleId, rid)
+		VALUES ('3', '10');
       	
       	END TRANSACTION;
 EOF;
 
-
-    $ret = $db->exec($sql);
-    if (!$ret)
-    {
-        echo $db->lastErrorMsg();
-    } else
-    {
-        //Tables created successfully.
-    }
+$ret = $db->exec($sql);
+if (!$ret)
+{
+	echo $db->lastErrorMsg();
+} else
+{
+	error_log("Tables created successfully", 0);
+}
 }
 catch(Exception $e)
 {
-    //prepare page for content
-    include_once "../src/ErrorHeader.php";
+//prepare page for content
+include_once "../src/ErrorHeader.php";
 
-    //Display error information
-    echo 'Caught exception: ',  $e->getMessage(), "<br>";
-    var_dump($e->getTraceAsString());
-    echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+//Display error information
+echo 'Caught exception: ',  $e->getMessage(), "<br>";
+var_dump($e->getTraceAsString());
+echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
 
-    $allVars = get_defined_vars();
-    debug_zval_dump($allVars);
+$allVars = get_defined_vars();
+debug_zval_dump($allVars);
 }
+
 ?>
