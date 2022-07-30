@@ -1,14 +1,12 @@
 <?php
-require_once "../src/RequestController.php";
-
 try {
     /*Get DB connection*/
-    require_once "../src/DBConnector.php";
+    require_once "../src/DBController.php";
 
     /*Get information from the search (post) request*/
     $acctype = $_POST['acctype'];
-    $password = $_POST['password'];
-    $fname = $_POST['fname'];
+    $password = hash('ripemd256', $_POST['password']); //convert password to 80 byte hash using ripemd256 before saving
+    $fname = htmlentities($_POST['fname']);
     $lname = $_POST['lname'];
     $dob = $_POST['dob']; //date obtained is already UTC
     $email = strtolower($_POST['email']); //is converted to lower
@@ -18,42 +16,9 @@ try {
     $sanswer = $_POST['sanswer'];
     $prevemail = $_POST['prevemail']; //required to find the user being updated
 
+
     if($acctype==null)
     {throw new Exception("input did not exist");}
-
-    /*Validate Input*/
-    if (RequestController::ValidateEmail($email) == false)
-    {
-        throw new Exception("Invalid email");
-    }
-
-    /*Validate Input*/
-    if (RequestController::ValidatePassword($password) == false)
-    {
-        throw new Exception("Invalid password");
-    }
-
-    /*Validate Input*/
-    if (RequestController::ValidateName($fname) == false)
-    {
-        throw new Exception("Invalid name");
-    }
-
-    /*Validate Input*/
-    if (RequestController::ValidateName($lname) == false)
-    {
-        throw new Exception("Invalid name");
-    }
-    
-    /*Prevent XSS*/
-    $password = RequestController::XssValidation($password);
-    $fname = RequestController::XssValidation($fname);
-    $lname = RequestController::XssValidation($lname);
-    $squestion = RequestController::XssValidation($squestion);
-    $sanswer = RequestController::XssValidation($sanswer);
-    $prevemail = RequestController::XssValidation($prevemail);
-
-    $password = hash('ripemd256', $password); //convert password to 80 byte hash using ripemd256 before saving
 
     /*Checking studentyear and facultyrank*/
     if ($acctype === "3") {
@@ -116,4 +81,9 @@ catch(Exception $e)
 
     //Display error information
     echo 'Caught exception: ',  $e->getMessage(), "<br>";
+    var_dump($e->getTraceAsString());
+    echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+
+    $allVars = get_defined_vars();
+    debug_zval_dump($allVars);
 }

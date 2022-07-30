@@ -6,26 +6,24 @@ define("admin", 1);
 define("faculty", 2);
 define("student", 3);
 
-class SessionController{
-    static function CreateSession($User,$uname, $pword){
-        
-        $acctype = $User->GetAccType(); //determines which dashboard to present
-        if (isset($_SESSION))
-                {
-                    //a session already existed
-                    session_destroy();
-                    session_start();
-                    $_SESSION['email'] = $uname;
-                    $_SESSION['acctype'] = $acctype;
-                } 
-                
-                else
-                {
-                    //a session did not exist
-                    session_start();
-                    $_SESSION['email'] = $uname;
-                    $_SESSION['acctype'] = $acctype;
-                }
+class SessionController
+{
+    static function CreateSession($uname, $acctype)
+    {
+        if (isset($_SESSION)) {
+            //a session already existed
+            session_destroy();
+            session_start();
+            $_SESSION['email'] = $uname;
+            $_SESSION['acctype'] = $acctype;
+        }
+
+        else {
+            //a session did not exist
+            session_start();
+            $_SESSION['email'] = $uname;
+            $_SESSION['acctype'] = $acctype;
+        }
     }
     function ValidateSession()
     {
@@ -34,28 +32,24 @@ class SessionController{
     function ValidateLogin()
     {
         session_start();
-        if(isset($_SESSION['acctype']))
-        {
+        if (isset($_SESSION['acctype'])) {
             return true;
         }
-        else
-        {
+        else {
             return false;
-        } 
+        }
     }
     static function GetType()
     {
         session_start();
-        if(isset($_SESSION['acctype']))
-        {
+        if (isset($_SESSION['acctype'])) {
             return $_SESSION['acctype'];
         }
-        else
-        {
+        else {
             return -1;
         }
     }
-    function ValidateEmail()
+    function isSetSessionEmail()
     {
         session_start(); //required to bring session variables into context
 
@@ -63,8 +57,10 @@ class SessionController{
         {
             return false;
         }
-        else {return true;}
-    } 
+        else {
+            return true;
+        }
+    }
     function GetEmail()
     {
         session_start(); //required to bring session variables into context
@@ -73,71 +69,59 @@ class SessionController{
         {
             return "empty";
         }
-        else {return $_SESSION['email'];}
+        else {
+            return $_SESSION['email'];
+        }
     }
-    function HasStudentRights()
+
+    function HasRights($acctype)
     {
-        session_start();
-        if(SessionController::authorize(SessionController::GetEmail(), "course_search.php"))
-        {
+        //session_start();
+        //Check if PHP session has already started
+        if(session_id() == ''){
+            session_start(); //resume session
+         }
+
+        if (isset($_SESSION['acctype']) && $_SESSION['acctype'] == $acctype) {
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }
-    function HasAdminRights()
+
+    static function authenticateSession() //checks that session is valid
     {
-        session_start();
-        if(SessionController::authorize(SessionController::GetEmail(), "create_account.php"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    function HasFacultyRights()
-    {
-        session_start();
-        if(SessionController::authorize(SessionController::GetEmail(), "enter_grades.php"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    static function authenticate(){
-        session_start();
-        if (isset($_SESSION['acctype'])) {
+        //session_start();
+        //Check if PHP session has already started
+        if(session_id() == ''){
+            session_start(); //resume session
+         }
+
+        //check if session variables are set
+        if (isset($_SESSION) AND isset($_SESSION['acctype'])) {
+            //a better session check which uses the DB is needed
             //a session exists
             return true;
         }
-        else{ 
+        else {
             return false;
         }
-    }
-    static function authorize($un, $res){
-        if (DBConnector::CheckRights($un, $res))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    static function closeSession(){
-        
-            session_destroy(); //clear all session variables
-        
-    //redirect
-    
     }
 
-}       
+    static function authorize($un, $res)
+    {
+        if (DBConnector::CheckRights($un, $res)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    static function closeSession()
+    {
+        session_destroy(); //clear all session variables
+    }
+}
+
 ?>

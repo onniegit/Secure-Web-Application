@@ -62,7 +62,7 @@ require_once "SessionController.php";
             <div class=horizontal_line>
                 <hr>
             </div>";
-            if(DashboardController::HasAdminRights())
+            if(DashboardController::HasRights(admin))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'create_account.php'\">Create Account</button>
@@ -71,14 +71,14 @@ require_once "SessionController.php";
             <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'user_search.php'\">User Search</button>
             <br>";
             }
-            if(DashboardController::HasFacultyRights())
+            if(DashboardController::HasRights(faculty))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'enter_grades.php'\">Enter Grades</button>
             </div>
             <br>";
             }
-            if(DashboardController::HasStudentRights())
+            if(DashboardController::HasRights(student))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'course_search.php'\">Course Search</button>

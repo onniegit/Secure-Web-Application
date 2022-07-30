@@ -5,12 +5,11 @@ session_start();
 //store username in session array
 $_SESSION['email'] = $_POST['email'];
 
-try 
-{
+try {
     require_once "../src/ForgotPwController.php";
 
     ForgotPwController::ForgotPassword(strtolower($_POST['email']));
-}
+    }
 
 catch(Exception $e)
 {
@@ -19,6 +18,11 @@ catch(Exception $e)
 
     //Display error information
     echo 'Caught exception: ',  $e->getMessage(), "<br>";
+    var_dump($e->getTraceAsString());
+    echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+
+    $allVars = get_defined_vars();
+    debug_zval_dump($allVars);
 }
 
 

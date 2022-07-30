@@ -1,11 +1,11 @@
 <?php
 require_once "SessionController.php";
-   class Dashboard extends SessionController
+   class Dashboard1 extends SessionController
    {
    
     function Display()
        {
-        $atype = Dashboard::GetType();
+        $atype = Dashboard1::GetType();
         switch($atype)
         {
             case 1:
@@ -62,7 +62,7 @@ require_once "SessionController.php";
             <div class=horizontal_line>
                 <hr>
             </div>";
-            if(Dashboard::HasAdminRights())
+            if(Dashboard1::HasRights(admin))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'create_account.php'\">Create Account</button>
@@ -71,14 +71,14 @@ require_once "SessionController.php";
             <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'user_search.php'\">User Search</button>
             <br>";
             }
-            if(Dashboard::HasFacultyRights())
+            if(Dashboard1::HasRights(faculty))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'enter_grades.php'\">Enter Grades</button>
             </div>
             <br>";
             }
-            if(Dashboard::HasStudentRights())
+            if(Dashboard1::HasRights(student))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'course_search.php'\">Course Search</button>

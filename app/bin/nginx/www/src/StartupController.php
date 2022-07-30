@@ -1,12 +1,9 @@
 <?php
 
-clearDB();
+class StartupController
+{
 
-clearUploads();
-
-loadConfig();
-
-function clearDB() 
+public static function clearDB() 
 {
     $GLOBALS['dbPath'] = 'bin/nginx/db/persistentconndb.sqlite';
 
@@ -15,12 +12,26 @@ function clearDB()
     }
 }
 
-function clearUploads() 
+public static function clearUploads() 
 {
     array_map('unlink', glob("uploads/*"));
 }
 
-function loadConfig()
+public static function loadConfig()
 {
     shell_exec('php bin/nginx/www/config/Config.php');
 }
+
+public static function start()
+{
+    StartupController::clearDB();
+    StartupController::clearUploads();
+    StartupController::loadConfig();
+    //dashboard is launched from the batch file 
+}
+
+}
+
+StartupController::start();
+
+?>

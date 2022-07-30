@@ -18,6 +18,6 @@
        }
    }
 
-   global $rc;
-   $rc = new RedirectController();
+   global $redirectController;
+   $redirectController = new RedirectController();
 ?>

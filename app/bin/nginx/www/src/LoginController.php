@@ -1,62 +1,63 @@
 <?php
-require_once "../src/DBConnector.php";
-require_once "../src/User.php";
-require_once "../src/RequestController.php";
+require_once "User.php";
+require_once "RequestController.php";
+require_once "../public/LoginForm.php";
+require_once "Constants.php";
 
 global $acctype;
 
 class LoginController extends RequestController
 {
-    public static function Login($un,$pw)
+    public static function Login($un, $pw)
     {
+        $inputValidation = RequestController::ValidateInput($un, $pw); //Validate Input
 
-        if (LoginController::ValidateInput($un,$pw)==true) //Validate Input
-        {
-            $uname = LoginController::XssValidation($un); //to prevent XSS
-            $pword = LoginController::XssValidation($pw);
+        if ($inputValidation == true) {
+            $User = DBConnector::GetUser($un); //GetUser() -> User
 
-            $User = DBConnector::GetUser($uname); //GetUser() -> User
+            //Validate User's credentials
+            $validUser = LoginController::ValidateCredentials($User, $pw);
 
-            if (LoginController::ValidateCredentials($uname,$User->GetEmail(),$pw,$User->GetPassword())==true) //Validate User's credentials
-            {
-                LoginController::CreateSession($User, $uname, $pword);
+            //check user is authorized for requested function
+            $authorized = LoginController::authorize($un, Constants::$LOGINFORM_PHP);
 
-                if (LoginController::Authenticate(isset($_SESSION)==true AND DBConnector::CheckRights($uname,10)==true))
-                {
-                //redirect
-                header("Location: ../public/dashboard.php");
+            if ($validUser == true and $authorized) {
+
+                //create user session
+                LoginController::CreateSession($un, $User->GetAccType());
+
+                if (RequestController::HasRights(faculty)) {
+                    header("Location: ../public/FacultyDashboard.php");
+                }
+                elseif (RequestController::HasRights(admin)) {
+                    header("Location: ../public/AdminDashboard.php");
+                }
+                elseif (RequestController::HasRights(student)) {
+                    header("Location: ../public/StudentDashboard.php");
                 }
             }
-            
-
-            else // invalid user credentials
-            {                
-                header("Location: ../public/LoginForm.php?login=fail");
+            else // invalid user credentials or unauthorized
+            {
+                LoginForm::Error(Constants::$INVALID_CREDENTIALS);
             }
         }
-
         else // invalid input
         {
-            header("Location: ../public/LoginForm.php?login=fail");
+            LoginForm::Error(Constants::$INVALID_INPUT);
         }
     }
 
-    function ValidateInput($un,$pw) // validates input for format
-    {
-        if(LoginController::ValidateEmail($un)==true AND LoginController::ValidatePassword($pw)==true) return true;
+    function ValidateCredentials($User, $pw) // verifies correctness of username and password
 
-        else return false;
-    }
-    
-    function ValidateCredentials($un,$userUname,$pw,$userPword) // verifies correctness of username and password
     {
-        $hashedInputPword = hash('ripemd256', $pw);
+        $userPword = $User->GetPassword();
 
-        if ($un == $userUname AND $hashedInputPword == $userPword)
-        {
+        $hashedInputPword = hash(Constants::$PASSWORD_HASH, $pw);
+
+        if ($hashedInputPword == $userPword) {
             return true;
         }
-
-        else return false;
+        else
+            return false;
     }
 }
