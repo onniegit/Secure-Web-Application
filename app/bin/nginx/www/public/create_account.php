@@ -5,7 +5,7 @@ require_once "../src/SessionController.php";
 
 session_start(); //required to bring session variables into context
 
-if (SessionController::authenticate()) //check that session exists and is nonempty
+if (SessionController::authenticateSession()) //check that session exists and is nonempty
 {
     if (!SessionController::authorize(SessionController::GetEmail(), basename(__FILE__))) //check if user is not student
     {
@@ -64,7 +64,7 @@ else
 
             <div style="text-align:center">
                 <div class = "edit_acc_pane">
-                    <form action="../src/CreateAccountController.php" method="POST" id="accform">
+                    <form action="../src/CreateAccountUpdateLogic.php" method="POST" id="accform">
                         <label class="edit_acc_label">Account type:</label>
                         <select name="acctype" id="acctype" onchange="swapselection()">
                                 <optgroup label="Choose one">

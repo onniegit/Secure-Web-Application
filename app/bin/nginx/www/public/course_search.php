@@ -5,7 +5,7 @@ require_once "../src/DBConnector.php";
 
 //session_start(); //required to bring session variables into context
 
-if (SessionController::authenticate()) //check that session exists and is nonempty
+if (SessionController::authenticateSession()) //check that session exists and is nonempty
 {
     if (!SessionController::authorize(SessionController::GetEmail(), basename(__FILE__))) //check if user is not student
     {
@@ -49,7 +49,7 @@ else
         <!--Navigation Buttons-->
         <nav>
             <button class="button_large" type="button" onclick="toDashboard();">Dashboard</button>
-            <button class="button_large" type="button" onclick="toLogout();">Log Out</button>
+            <button class="button_large" type="button" onclick="Logout();">Log Out</button>
         </nav>
 
         <main>

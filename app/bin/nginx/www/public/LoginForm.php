@@ -1,18 +1,45 @@
 <?php
-try {
-  require_once "../src/RedirectController.php";
+require_once "../src/LoginController.php"; //include login controller
+require_once "../src/Constants.php";
 
-  if ($GLOBALS['rc']->ValidateLogin()) 
-  {
-    //redirect to dashboard
-    header("Location: dashboard.php");
-  } 
- 
-}
-catch(Exception $e)
+class LoginForm
 {
-    header("Location: LoginForm.php?login=fail");
-}?>
+  public static function Submit()
+  {
+    try
+    {
+      //call login method with username and password
+      LoginController::Login($_POST["username"], $_POST["password"]);
+  
+    }
+    catch(Exception $e)
+    {
+      echo "error2!";
+    }
+  }
+
+  public static function Error($ErrorCode)
+  {
+    //check the error code
+    switch($ErrorCode) 
+    {
+      case Constants::$INVALID_CREDENTIALS:
+        header("Location: ../public/LoginForm.php?login=fail");
+        break;
+      case Constants::$INVALID_INPUT:
+        header("Location: ../public/LoginForm.php?input=fail");
+        break;
+      default:
+    }
+  }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") //if POST request detected
+{
+  LoginForm::Submit(); //call submit
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -54,8 +81,12 @@ catch(Exception $e)
                 {
                     echo "The username/password is invalid.";
                 }
+                elseif ("input=fail" == parse_url($url, PHP_URL_QUERY))
+                {
+                    echo "The username/password format is invalid.";
+                }
                 ?>
-                <form action="../src/Login.php" method="POST">
+                <form action="LoginForm.php" method="POST">
                     <label style="float: left" for="username">Username:&nbsp;&nbsp;</label>
                     <input type="text" id="username" name="username"><br><br>
                     <label style="float: left" for="password">Password:&nbsp;&nbsp;</label>
@@ -66,7 +97,6 @@ catch(Exception $e)
             </div>
         </div>
     </main>
-
   </div>
 </body>
 </html>

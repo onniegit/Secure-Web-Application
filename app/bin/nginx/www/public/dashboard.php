@@ -1,54 +1,22 @@
 <?php
 //Access Control
-require_once "../src/Dashboard.php";
-session_start(); //required to bring session variables into context
+require_once "../src/SessionController.php";
+require_once "Form.php";
 
-if (!Dashboard::ValidateEmail()) //check that session exists and is nonempty
+class Dashboard extends Form
 {
-    http_response_code(403);
-    die('Forbidden');
+  public static function LoadPage()
+  { //check that session exists and is nonempty   
+    if (!SessionController::isSetSessionEmail()) {
+      http_response_code(403);
+      die('Forbidden');
+    }
+  }
+}
+
+$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+//if request contains logout
+if ("logout" == parse_url($url, PHP_URL_QUERY)) {
+  Dashboard::Logout(); //call logout
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="../resources/secure_app.css">
-    <link rel="icon" type="image/svg" href="../resources/Header_Lock_Image.svg">
-    <script async src="../resources/nav.js"></script>
-    <meta charset="utf-8" />
-    <?php
-
-      echo "<title>Secure ED. - Dashboard</title>";
-
-      ?>
-
-</head>
-<body>
-  <div id="wrapper">
-    <header>
-	  <table class="header_table">
-	    <tbody>
-		  <tr>
-              <td class="lock"><img src="../resources/Header_Lock_Image.svg" style="width:9vh;" alt="Header_lock"></td>
-			  <td class="title"><b>Secure ED.</b></td>
-              <td class="header_table_cell"></td>
-		  </tr>
-		</tbody>
-	  </table>
-    </header>
-
-      <!--Navigation Buttons-->
-      <nav>
-          <button class="button_large" type="button" onclick="toLogout();">Log Out</button>
-      </nav>
-
-      <?php
-
-      //Dashboard::Display();
-      Dashboard::LoadPage();
-
-    ?>
-  </div>
-</body>
-</html>

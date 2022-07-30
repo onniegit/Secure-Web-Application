@@ -5,7 +5,7 @@ require_once "../src/DBConnector.php";
 //Access Control
 session_start(); //required to bring session variables into context
 
-if (SessionController::authenticate()) //check that session exists and is nonempty
+if (SessionController::authenticateSession()) //check that session exists and is nonempty
 {
     if (!SessionController::authorize(SessionController::GetEmail(), basename(__FILE__))) //check if user is not student
     {

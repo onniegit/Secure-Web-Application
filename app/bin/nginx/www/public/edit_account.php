@@ -5,7 +5,7 @@ require_once "../src/SessionController.php";
 
 session_start(); //required to bring session variables into context
 
-if (SessionController::authenticate()) //check that session exists and is nonempty
+if (SessionController::authenticateSession()) //check that session exists and is nonempty
 {
     if (!SessionController::authorize(SessionController::GetEmail(), basename(__FILE__))) //check if user is not student
     {
@@ -26,7 +26,7 @@ else
 //This php code gets the selected users info from the database for display
 
 /*Get DB connection*/
-require_once "../src/DBConnector.php";
+require_once "../src/DBController.php";
 
 /*Get information from the post request*/
 
@@ -118,9 +118,9 @@ else
                             <option value="2" <?php if($userinfo[11]===2){echo "selected";} ?> ">Faculty</option>
                             <option value="3" <?php if($userinfo[11]===3){echo "selected";} ?> ">Student</option>
                         </select>
-                        <div class=horizontal_line>
-                            <hr>
-                        </div>
+                    <div class=horizontal_line>
+                        <hr>
+                    </div>
                     <!--Input boxes-->
                         <table>
                             <tbody>
@@ -208,7 +208,7 @@ else
                                     <label class = "edit_acc_label"> Email: </label>
                                 </td>
                                 <td>
-                                    <input type="email" name="email" id="email" value="<?php if(!$error){echo "$userinfo[1]";} ?>" required>
+                                    <input type="email" name="email" id="email" value="<?php if(!$error){echo "$userinfo[1]";} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -224,7 +224,7 @@ else
                                     <label class = "edit_acc_label"> Confirm Email: </label>
                                 </td>
                                 <td>
-                                    <input type="email" name="confirmemail" id="confirmemail" value="<?php if(!$error){echo $userinfo[1];} ?>" required>
+                                    <input type="email" name="confirmemail" id="confirmemail" value="<?php if(!$error){echo $userinfo[1];} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -252,7 +252,7 @@ else
                                     <label class = "edit_acc_label"> Password: </label>
                                 </td>
                                 <td>
-                                    <input type="password" name="password" id="password" value="" required>
+                                    <input type="password" name="password" id="password" value="">
                                 </td>
 
                                 <!--Blank-->
@@ -268,7 +268,7 @@ else
                                     <label class = "edit_acc_label"> Confirm Password: </label>
                                 </td>
                                 <td>
-                                    <input type="password" name="confirmpassword" id="confirmpassword" value="" required>
+                                    <input type="password" name="confirmpassword" id="confirmpassword" value="">
                                 </td>
 
                                 <!--Blank-->
@@ -324,8 +324,9 @@ else
                             </tr>
                             </tbody>
                         </table>
-                    </form>  
+                    </form>
                 </div>
+
                 <div style="text-align: left;">
                     <input type="submit" value="Submit" onclick="submitAccount()">&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="button" value="Cancel" onclick=" location.href = 'user_search.php'">

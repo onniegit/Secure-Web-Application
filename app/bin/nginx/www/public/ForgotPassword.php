@@ -5,7 +5,7 @@ session_start();
 try {
   require_once "../src/RedirectController.php";
 
-  if ($GLOBALS['rc']->ValidateLogin()) 
+  if ($GLOBALS['redirectController']->ValidateLogin()) 
   {
     //redirect to dashboard
     header("Location: dashboard.php");
