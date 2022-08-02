@@ -174,7 +174,7 @@ class DBConnector
         fclose($handle);
     }
 
-    function usersearchstudent($db, $studentyear, $fname, $lname, $dob, $email)
+    public static function usersearchstudent($db, $studentyear, $fname, $lname, $dob, $email)
     {
         //send back student type search results
 
@@ -193,7 +193,7 @@ class DBConnector
         $stmt->bindParam(':email', $email, SQLITE3_TEXT);
         return $results = $stmt->execute();
     }
-    function usersearchfaculty($db, $facultyrank, $fname, $lname, $dob, $email)
+    public static function usersearchfaculty($db, $facultyrank, $fname, $lname, $dob, $email)
     {
         //send back faculty type search results
 
@@ -213,7 +213,7 @@ class DBConnector
         return $results = $stmt->execute();
     }
 
-    function gensearch($db, $fname, $lname, $dob, $email, $facultyrank)
+    public static function gensearch($db, $fname, $lname, $dob, $email, $facultyrank)
     {
         //send back a general search (may change to exclude admins)
 
@@ -231,6 +231,84 @@ class DBConnector
         $stmt->bindParam(':email', $email, SQLITE3_TEXT);
         $stmt->bindParam(':facultyrank', $facultyrank, SQLITE3_TEXT);
         return $results = $stmt->execute();
+    }
+
+    public static function createUser($User)
+    {
+        try {
+            /*Get information from the search (post) request*/
+            $acctype = $User->GetAccType();
+            $password = hash(Constants::$PASSWORD_HASH, $User->GetPassword()); //convert password to 80 byte hash using ripemd256 before saving
+            $fname = $User->GetFName();
+            $lname = $User->GetLName();
+            $dob = $User->GetDOB(); //is already UTC
+            $email = $User->GetEmail();
+            $studentyear = $User->GetYear(); //only if student, ensure null otherwise (must be a number)
+            $facultyrank = $User->GetRank(); //only if faculty, ensure null otherwise
+            $squestion = $User->GetSQuestion();
+            $sanswer = $User->GetSAnswer();
+        
+            /*Check for a valid UserID to use. Assumes Users count in order*/
+            $rows = $GLOBALS['db']->query("SELECT COUNT(*) as count FROM User");
+            $row = $rows->fetchArray();
+            $newUserID = $row['count'] + 927000000; //must always be 1 higher than previous
+        
+            /*Check if user already exists*/
+            $query = "SELECT Email FROM User WHERE Email = :email";
+            $stmt = $GLOBALS['db']->prepare($query); //prevents SQL injection by escaping SQLite characters
+            $stmt->bindValue(':email', $email);
+            $results = $stmt->execute();
+        
+            if ($results) //user doesn't already exist
+            {
+                /*Update the database with the new info*/
+                $query = "INSERT INTO User VALUES (:newUserID, :email, :password, :fname, :lname, :dob, :studentyear, :facultyrank, :squestion, :sanswer)";
+                $stmt = $GLOBALS['db']->prepare($query); //prevents SQL injection by escaping SQLite characters
+                $stmt->bindParam(':newUserID', $newUserID, SQLITE3_INTEGER);
+                $stmt->bindParam(':email', $email, SQLITE3_TEXT);
+                $stmt->bindParam(':password', $password, SQLITE3_TEXT);
+                $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
+                $stmt->bindParam(':lname', $lname, SQLITE3_TEXT);
+                $stmt->bindParam(':dob', $dob, SQLITE3_TEXT);
+                $stmt->bindParam(':studentyear', $studentyear, SQLITE3_INTEGER);
+                $stmt->bindParam(':facultyrank', $facultyrank, SQLITE3_TEXT);
+                $stmt->bindParam(':squestion', $squestion, SQLITE3_TEXT);
+                $stmt->bindParam(':sanswer', $sanswer, SQLITE3_TEXT);
+                global $results;
+                $results = $stmt->execute();
+        
+                if($results){//query to User table is successful
+                $query = "INSERT INTO UserRole VALUES (:newUserID, :acctype)";
+                $stmt = $GLOBALS['db']->prepare($query); //prevents SQL injection by escaping SQLite characters
+                $stmt->bindParam(':newUserID', $newUserID, SQLITE3_INTEGER);
+                $stmt->bindParam(':acctype', $acctype, SQLITE3_INTEGER);
+                $results = $stmt->execute();
+                }
+            }
+        
+            //is true on success and false on failure (can fail in either query)
+            if (!$results) {
+                throw new Exception("Create account failed");
+            } else {
+                //backup database
+                $GLOBALS['db']->backup($GLOBALS['db'], "temp", $GLOBALS['dbPath']);
+                //redirect
+                header("Location: ../public/dashboard.php");
+            }
+        }
+        catch(Exception $e)
+        {
+            //prepare page for content
+            include_once "ErrorHeader.php";
+        
+            //Display error information
+            echo 'Caught exception: ',  $e->getMessage(), "<br>";
+            var_dump($e->getTraceAsString());
+            echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+        
+            $allVars = get_defined_vars();
+            debug_zval_dump($allVars);
+        }
     }
 
     public static function clearDB()
@@ -318,12 +396,5 @@ class DBConnector
         catch (Exception $e) {
             error_log($GLOBALS['db']->lastErrorMsg(), 0);
         }
-    //$GLOBALS['db']->close();
-
-    //$GLOBALS['dbPath'] = 'bin/nginx/db/persistentconndb.sqlite';
-
-    //if (file_exists($GLOBALS['dbPath'])) {
-    //    unlink($GLOBALS['dbPath']);
-    //}
     }
 }

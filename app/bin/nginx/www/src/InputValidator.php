@@ -1,8 +1,9 @@
 <?php
+require_once "User.php";
 
 trait InputValidator
 {
-    function ValidateEmail($un) // returns true if input is in email format
+    public static function ValidateEmail($un) // returns true if input is in email format
     {
         if(filter_var($un,FILTER_VALIDATE_EMAIL)==true) 
             return true;
@@ -10,7 +11,7 @@ trait InputValidator
             return false;
     }
 
-    function ValidatePassword($pw) // returns true if password is in correct format - does not verify correctness of password
+    public static function ValidatePassword($pw) // returns true if password is in correct format - does not verify correctness of password
     {
         // requirement is at least one capital letter, one lowercase letter, one number, and one special char from whitelist
         $passwordFormat = "/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,20}/"; // whitelist of special chars ! @ # $ % ^ & *
@@ -21,7 +22,7 @@ trait InputValidator
             return false;
     }
 
-    function XssValidation($input):string // applies in-built php methods to input to prevent XSS
+    public static function XssValidation($input):string // applies in-built php methods to input to prevent XSS
     {
         $input = trim($input);
         $input = stripslashes($input);
@@ -30,7 +31,7 @@ trait InputValidator
         return $input;
     }
 
-    function ValidateSID($sid) // returns true if student ID is in correct format
+    public static function ValidateSID($sid) // returns true if student ID is in correct format
     {
         $sidFormat = '/^(?=.*[0-9]).{9}$/';
 
@@ -40,7 +41,7 @@ trait InputValidator
             return false;
     }
 
-    function ValidateGrade($grade) // returns true if grade is in correct format
+    public static function ValidateGrade($grade) // returns true if grade is in correct format
     {
         $gradeFormat = '/^[A-F]$/';
 
@@ -50,7 +51,7 @@ trait InputValidator
             return false;
     }
 
-    function ValidateInput($un,$pw) // validates username and password for format
+    public static function ValidateInput($un,$pw) // validates username and password for format
     {
         $un = InputValidator::XssValidation($un); //to prevent XSS
         $pw = InputValidator::XssValidation($pw); //to prevent XSS
@@ -62,5 +63,62 @@ trait InputValidator
             return true;
         else 
             return false;
+    }
+
+    public static function ValidateUserInfo(&$User) // validates given user data
+    {
+        //validate email
+        $email = InputValidator::XssValidation($User->GetEmail()); //to prevent XSS
+        $valEmail = InputValidator::ValidateEmail($email); //check email format
+        
+        if($valEmail == false)
+        {
+            error_log("invalid email", 0);
+            return false;
+        }
+
+        //validate password
+        $password = InputValidator::XssValidation($User->GetPassword()); //to prevent XSS
+        $valPassw = InputValidator::ValidatePassword($password); //check password format
+        
+        if($valPassw == false)
+        {
+            error_log("invalid password", 0);
+            return false;
+        }
+
+        //validate account type
+        $acctype = InputValidator::XssValidation($User->GetAccType()); //to prevent XSS
+        $User->SetAccType($acctype);
+
+        //validate first name
+        $fname = InputValidator::XssValidation($User->GetFName()); //to prevent XSS
+        $User->SetFName($fname);
+
+        //validate last name
+        $lname = InputValidator::XssValidation($User->GetLName()); //to prevent XSS
+        $User->SetLName($lname);
+
+        //validate dob
+        $dob = InputValidator::XssValidation($User->GetDOB()); //to prevent XSS
+        $User->SetDOB($dob);
+
+        //validate year
+        $year = InputValidator::XssValidation($User->GetYear()); //to prevent XSS
+        $User->SetYear($year);
+
+        //validate rank
+        $rank = InputValidator::XssValidation($User->GetRank()); //to prevent XSS
+        $User->SetRank($rank);
+
+        //validate question
+        $question = InputValidator::XssValidation($User->GetSQuestion()); //to prevent XSS
+        $User->SetSQuestion($question);
+
+        //validate answer
+        $answer = InputValidator::XssValidation($User->GetSAnswer()); //to prevent XSS
+        $User->SetSAnswer($answer);
+
+        return true;
     }
 }

@@ -2,12 +2,19 @@
 
 class Constants
 {
+    public static $PASSWORD_HASH = 'ripemd256'; //hash key for stored passwords
+
+    //error codes
     public static $INVALID_CREDENTIALS = 1; //error code - invalid login credentials
     public static $INVALID_INPUT = 2; //error code - invalid input format
-    public static $PASSWORD_HASH = 'ripemd256'; //hash key for stored passwords
+    public static $INVALID_SESSION = 3; //error code - invalid session
     
     //Resource names
     public static $LOGINFORM_PHP = 'LoginForm.php';
+    public static $CREATEACCOUTFORM_PHP = 'CreatAcctForm.php';
+    public static $ADMIN_TYPE = "1";
+    public static $FACULTY_TYPE = "2";
+    public static $STUDENT_TYPE = "3";
 }
 
 ?>
