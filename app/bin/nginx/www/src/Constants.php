@@ -12,6 +12,9 @@ class Constants
     //Resource names
     public static $LOGINFORM_PHP = 'LoginForm.php';
     public static $CREATEACCOUTFORM_PHP = 'CreatAcctForm.php';
+    public static $USERSEARCHFORM_PHP = 'UserSearchForm.php';
+    
+    //Account types
     public static $ADMIN_TYPE = "1";
     public static $FACULTY_TYPE = "2";
     public static $STUDENT_TYPE = "3";

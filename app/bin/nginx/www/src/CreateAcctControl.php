@@ -26,7 +26,7 @@ class CreateAcctControl extends RequestController
             CreateAcctForm::Error(Constants::$INVALID_SESSION);
         }
     }
-
+    
     public static function submit($User)
     {
         $validSession = CreateAcctControl::authenticateSession();

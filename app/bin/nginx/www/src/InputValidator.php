@@ -65,6 +65,59 @@ trait InputValidator
             return false;
     }
 
+    public static function ValidateUserSearch(&$User) // validates given search data
+    {
+        //validate email
+        if($User->GetEmail() != ""){
+            $email = InputValidator::XssValidation($User->GetEmail()); //to prevent XSS
+            $valEmail = InputValidator::ValidateEmail($email); //check email format
+        
+            if($valEmail == false)
+            {
+                error_log("invalid email", 0);
+                return false;
+            }
+        }
+
+        //validate account type
+        if($User->GetAccType() != ""){
+            $acctype = InputValidator::XssValidation($User->GetAccType()); //to prevent XSS
+            $User->SetAccType($acctype);
+        }
+
+        //validate first name
+        if($User->GetFName() != ""){
+            $fname = InputValidator::XssValidation($User->GetFName()); //to prevent XSS
+            $User->SetFName($fname);
+        }
+
+        //validate last name
+        if($User->GetLName() != ""){
+            $lname = InputValidator::XssValidation($User->GetLName()); //to prevent XSS
+            $User->SetLName($lname);
+        }
+
+        //validate dob
+        if($User->GetDOB() != ""){
+            $dob = InputValidator::XssValidation($User->GetDOB()); //to prevent XSS
+            $User->SetDOB($dob);
+        }
+
+        //validate year
+        if($User->GetYear() != ""){
+            $year = InputValidator::XssValidation($User->GetYear()); //to prevent XSS
+            $User->SetYear($year);
+        }
+
+        //validate rank
+        if($User->GetRank() != ""){
+            $rank = InputValidator::XssValidation($User->GetRank()); //to prevent XSS
+            $User->SetRank($rank);
+        }
+        
+        return true;
+    }
+
     public static function ValidateUserInfo(&$User) // validates given user data
     {
         //validate email

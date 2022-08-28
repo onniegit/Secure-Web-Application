@@ -174,7 +174,7 @@ class DBConnector
         fclose($handle);
     }
 
-    public static function usersearchstudent($db, $studentyear, $fname, $lname, $dob, $email)
+    public static function usersearchstudent($studentyear, $fname, $lname, $dob, $email)
     {
         //send back student type search results
 
@@ -185,7 +185,7 @@ class DBConnector
                 (DOB LIKE :dob OR :dob = 'defaultvalue!') AND
                 (Email LIKE :email OR :email = 'defaultvalue!') AND
                 (Year LIKE :studentyear OR :studentyear = 'defaultvalue!')";
-        $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
+        $stmt = $GLOBALS['db']->prepare($query); //prevents SQL injection by escaping SQLite characters
         $stmt->bindParam(':studentyear', $studentyear, SQLITE3_INTEGER);
         $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
         $stmt->bindParam(':lname', $lname, SQLITE3_TEXT);
@@ -193,7 +193,7 @@ class DBConnector
         $stmt->bindParam(':email', $email, SQLITE3_TEXT);
         return $results = $stmt->execute();
     }
-    public static function usersearchfaculty($db, $facultyrank, $fname, $lname, $dob, $email)
+    public static function usersearchfaculty($facultyrank, $fname, $lname, $dob, $email)
     {
         //send back faculty type search results
 
@@ -204,7 +204,7 @@ class DBConnector
                 (DOB LIKE :dob OR :dob = 'defaultvalue!') AND
                 (Email LIKE :email OR :email = 'defaultvalue!') AND
                 (Rank LIKE :facultyrank OR :facultyrank = 'defaultvalue!')";
-        $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
+        $stmt = $GLOBALS['db']->prepare($query); //prevents SQL injection by escaping SQLite characters
         $stmt->bindParam(':facultyrank', $facultyrank, SQLITE3_TEXT);
         $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
         $stmt->bindParam(':lname', $lname, SQLITE3_TEXT);
@@ -213,7 +213,7 @@ class DBConnector
         return $results = $stmt->execute();
     }
 
-    public static function gensearch($db, $fname, $lname, $dob, $email, $facultyrank)
+    public static function gensearch($fname, $lname, $dob, $email, $facultyrank)
     {
         //send back a general search (may change to exclude admins)
 
@@ -224,13 +224,79 @@ class DBConnector
                 (DOB LIKE :dob OR :dob = 'defaultvalue!') AND
                 (Email LIKE :email OR :email = 'defaultvalue!') AND
                 (Rank LIKE :facultyrank OR :facultyrank = 'defaultvalue!')";
-        $stmt = $db->prepare($query); //prevents SQL injection by escaping SQLite characters
+        $stmt = $GLOBALS['db']->prepare($query); //prevents SQL injection by escaping SQLite characters
         $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
         $stmt->bindParam(':lname', $lname, SQLITE3_TEXT);
         $stmt->bindParam(':dob', $dob, SQLITE3_TEXT);
         $stmt->bindParam(':email', $email, SQLITE3_TEXT);
         $stmt->bindParam(':facultyrank', $facultyrank, SQLITE3_TEXT);
         return $results = $stmt->execute();
+    }
+
+    public static function searchUser($User)
+    {
+        try {
+            /*Get information from the search (post) request*/
+            $acctype = $User->GetAccType();
+            $fname = $User->GetFName();
+            $lname = $User->GetLName();
+            $dob = $User->GetDOB(); //is already UTC
+            $email = $User->GetEmail();
+            $studentyear = $User->GetYear(); //only if student, ensure null otherwise (must be a number)
+            $facultyrank = $User->GetRank(); //only if faculty, ensure null otherwise
+
+            if($acctype==null)
+            {
+                error_log("no search input", 0);
+                return;
+            }
+
+            //handle blank values
+            if ($fname === "") {
+                $fname = "defaultvalue!";
+            }
+            if ($lname === "") {
+                $lname = "defaultvalue!";
+            }
+            if ($dob === "") {
+                $dob = "defaultvalue!";
+            }
+            if ($email === "") {
+                $email = "defaultvalue!";
+            }
+            if ($studentyear === "") {
+                $studentyear = "defaultvalue!";
+            }
+            if ($facultyrank === "") {
+                $facultyrank = "defaultvalue!";
+            }
+
+            //determine account type
+            if($acctype=="Student") {
+                $results = DBConnector::usersearchstudent($studentyear,$fname,$lname,$dob,$email);
+            }
+            elseif($acctype=="Faculty"){
+                $results = DBConnector::usersearchfaculty($facultyrank,$fname,$lname,$dob,$email);
+            }
+            else{
+                $results = DBConnector::gensearch($fname,$lname,$dob,$email,$facultyrank);
+            }
+              
+            return $results;
+        }
+        catch(Exception $e)
+        {
+            //prepare page for content
+            include_once "ErrorHeader.php";
+        
+            //Display error information
+            echo 'Caught exception: ',  $e->getMessage(), "<br>";
+            var_dump($e->getTraceAsString());
+            echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+        
+            $allVars = get_defined_vars();
+            debug_zval_dump($allVars);
+        }
     }
 
     public static function createUser($User)
