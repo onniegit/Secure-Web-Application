@@ -1,9 +1,34 @@
 <?php
 require_once "dashboard.php";
+require_once "../src/CreateAcctControl.php";
+require_once "../src/UserSearchControl.php";
 class AdminDashboard extends Dashboard
 {
+  public static function createAccount()
+  {
+    CreateAcctControl::createAccount();
+  }
+  public static function userSearch()
+  {
+    //error_log("calling search", 0);
+    UserSearchControl::userSearch();
+  }
 }
 AdminDashboard::LoadPage();
+
+if ($_SERVER["REQUEST_METHOD"] == "GET") //if GET request detected
+{
+  $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+  //if request contains create
+  if ("create" == parse_url($url, PHP_URL_QUERY)) {
+    AdminDashboard::createAccount(); //call createAccount
+  }
+  //if request contains search
+  elseif ("search" == parse_url($url, PHP_URL_QUERY)) {
+    //error_log("found search", 0);
+    AdminDashboard::userSearch(); //call userSearch
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -38,10 +63,10 @@ AdminDashboard::LoadPage();
                 <hr>
             </div>
             <div>
-              <button class="button_large" type="button" onclick="location.href='create_account.php'">Create Account</button>
+              <button class="button_large" type="button" onclick="location.href='AdminDashboard.php?create'">Create Account</button>
             </div>
             <br>
-              <button class="button_large" type="button" onclick="location.href='user_search.php'">User Search</button>
+              <button class="button_large" type="button" onclick="location.href='AdminDashboard.php?search'">User Search</button>
             <br>
       </main>
   </div>
