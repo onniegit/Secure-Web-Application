@@ -465,7 +465,7 @@ BEGIN TRANSACTION;
 		VALUES ('course_search.php');
 	
 	INSERT INTO Resource (ResourceName)
-		VALUES ('create_account.php');
+		VALUES ('CreatAcctForm.php');
 
 	INSERT INTO Resource (ResourceName)
 		VALUES ('dashboard.php');
@@ -489,7 +489,7 @@ BEGIN TRANSACTION;
 		VALUES ('LoginForm.php');
 	
 	INSERT INTO Resource (ResourceName)
-		VALUES ('user_search.php');
+		VALUES ('UserSearchForm.php');
 
 /*--------------AccessRight Values-----------------*/
 	INSERT INTO AccessRight (RoleId, rid)
