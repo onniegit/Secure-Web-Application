@@ -49,7 +49,7 @@ class UserSearchControl extends RequestController
                     //is true on success and false on failure
                     if($results->fetchArray(SQLITE3_ASSOC))
                     {
-                        error_log("results found", 0);
+                        //error_log("results found", 0);
 
                         /*store user search info in cookie for later retrieval and search in UserSearchLogic.php*/
                         setcookie('acctype', $User->GetAccType(), time() + (86400 / 24), "/"); // 86400 = 1 day, "/" = cookie is available in entire website

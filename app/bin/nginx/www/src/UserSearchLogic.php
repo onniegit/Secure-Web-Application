@@ -44,7 +44,7 @@ try {
 
         while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
             $jsonArray[] = $row;
-            error_log("reading row", 0);
+            //error_log("reading row", 0);
         }
     }
     

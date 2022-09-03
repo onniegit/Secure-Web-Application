@@ -2,10 +2,6 @@
 require_once "User.php";
 require_once "../src/DBConnector.php";
 
-define("admin", 1);
-define("faculty", 2);
-define("student", 3);
-
 class SessionController
 {
     static function CreateSession($uname, $acctype)

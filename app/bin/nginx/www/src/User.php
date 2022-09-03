@@ -11,25 +11,12 @@ class User
     private $Rank;
     private $SQuestion;
     private $SAnswer;
+    private $PrevEmail;
 
     public function __construct()
     {
 
     }
-
-    /*public function __construct($Email,$AccType,$Password,$FName,$LName,$DOB,$Year,$Rank,$SQuestion,$SAnswer)
-    {
-        $this->Email = $Email;
-        $this->AccType = $AccType;
-        $this->Password = $Password;
-        $this->FName = $FName;
-        $this->Lname = $LName;
-        $this->DOB = $DOB;
-        $this->Year = $Year;
-        $this->Rank = $Rank;
-        $this->SQuestion = $SQuestion;
-        $this->SAnswer = $SAnswer;
-    }*/
     
     public function GetEmail()
     {
@@ -129,5 +116,14 @@ class User
     public function SetSAnswer($SAnswer)
     {
         $this->SAnswer = $SAnswer;
+    }
+    public function GetPrevEmail()
+    {
+        return $this->PrevEmail;
+    }
+
+    public function SetPrevEmail($PrevEmail)
+    {
+        $this->PrevEmail = $PrevEmail;
     }
 }

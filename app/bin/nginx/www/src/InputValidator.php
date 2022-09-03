@@ -172,6 +172,10 @@ trait InputValidator
         $answer = InputValidator::XssValidation($User->GetSAnswer()); //to prevent XSS
         $User->SetSAnswer($answer);
 
+        //validate previous email
+        $prevemail = InputValidator::XssValidation($User->GetPrevEmail()); //to prevent XSS
+        $User->SetPrevEmail($prevemail);
+
         return true;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+require_once "Constants.php";
 require_once "SessionController.php";
    class DashboardController extends SessionController
    {
@@ -62,7 +63,7 @@ require_once "SessionController.php";
             <div class=horizontal_line>
                 <hr>
             </div>";
-            if(DashboardController::HasRights(admin))
+            if(DashboardController::HasRights(Constants::$ADMIN_TYPE))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'create_account.php'\">Create Account</button>
@@ -71,14 +72,14 @@ require_once "SessionController.php";
             <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'user_search.php'\">User Search</button>
             <br>";
             }
-            if(DashboardController::HasRights(faculty))
+            if(DashboardController::HasRights(Constants::$FACULTY_TYPE))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'enter_grades.php'\">Enter Grades</button>
             </div>
             <br>";
             }
-            if(DashboardController::HasRights(student))
+            if(DashboardController::HasRights(Constants::$STUDENT_TYPE))
             {
                 echo"<div>
                 <button class=\"button_large\" type=\"button\" onclick=\"location.href = 'course_search.php'\">Course Search</button>

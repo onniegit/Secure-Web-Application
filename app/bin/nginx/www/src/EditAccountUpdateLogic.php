@@ -63,7 +63,7 @@ try {
         $results = $stmt->execute();
     }
 
-//is true on success and false on failure
+    //is true on success and false on failure
     if (!$results) {
         throw new Exception("edit failed");
     } else {
