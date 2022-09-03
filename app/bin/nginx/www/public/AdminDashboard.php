@@ -6,6 +6,7 @@ class AdminDashboard extends Dashboard
 {
   public static function createAccount()
   {
+    //error_log("calling create!", 0);
     CreateAcctControl::createAccount();
   }
   public static function userSearch()
@@ -14,6 +15,7 @@ class AdminDashboard extends Dashboard
     UserSearchControl::userSearch();
   }
 }
+
 AdminDashboard::LoadPage();
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") //if GET request detected

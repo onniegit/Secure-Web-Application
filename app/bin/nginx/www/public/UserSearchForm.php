@@ -2,6 +2,7 @@
 require_once "dashboard.php";
 require_once "../src/User.php";
 require_once "../src/UserSearchControl.php";
+require_once "../src/EditAccountControl.php";
 class UserSearchForm extends Dashboard
 {
     public static function Error($ErrorCode)
@@ -11,6 +12,9 @@ class UserSearchForm extends Dashboard
         {
             case Constants::$INVALID_SESSION:
                 header("Location: ../public/LoginForm.php");
+                break;
+            case Constants::$UNAUTHORIZED:
+                header("Location: ../public/UserSearchForm.php");
                 break;
             case Constants::$INVALID_INPUT:
                 header("Location: ../public/UserSearchForm.php?input=fail");
@@ -42,12 +46,25 @@ class UserSearchForm extends Dashboard
         //search user
        UserSearchControl::submit($User);
     }
+
+    public static function editAccount()
+    {
+        /*Get information from the post request*/
+        $prevemail = strtolower($_POST['email']);
+        EditAccountControl::editAccount($prevemail);
+    }
 }
 UserSearchForm::LoadPage();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") //if POST request detected
 {
-    UserSearchForm::Submit(); //call submit
+    //check which form got submitted (user search or edit user)
+    if(isset($_POST["acctype"])){
+        UserSearchForm::submit(); //call submit for user search
+    }
+    else{
+        UserSearchForm::editAccount(); //call submit for edit user
+    }
 }
 
 ?>

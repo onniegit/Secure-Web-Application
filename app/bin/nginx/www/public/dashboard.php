@@ -8,6 +8,7 @@ class Dashboard extends Form
   public static function LoadPage()
   { //check that session exists and is nonempty   
     if (!SessionController::isSetSessionEmail()) {
+      
       http_response_code(403);
       die('Forbidden');
     }
