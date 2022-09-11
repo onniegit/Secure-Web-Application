@@ -1,5 +1,6 @@
 <?php
 require_once "User.php";
+require_once "CSInfo.php";
 
 trait InputValidator
 {
