@@ -2,8 +2,9 @@ function fetch() {
     
     // (B) AJAX SEARCH REQUEST
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', "../src/CourseSearchLogic.php", true);
-    xhr.onload = function () {
+    xhr.open('GET', "../src/SectionSearchLogic.php", true);
+    xhr.onload = function () 
+    {
         //there must be no other echos except the JSON file or JSON.parse fails
         var results = JSON.parse(this.response),
             wrapper = document.getElementById("results");
@@ -21,24 +22,29 @@ function fetch() {
 
         if (results !== null) //using results.length crashed when there was no search results
         {
+            
             wrapper.innerHTML = "";
             for (let res of results) {
+
                 let row = document.createElement("span");
 
-                row.innerHTML = `<form method="post" action="CourseSearchForm.php"><table class="course_search_table"><tr>
-                                         <td class="course_search_results_output"><input type="hidden" value="${res['CourseName']}" name="coursename">${res['CourseName']}</input></td> 
-                                         <td class="course_search_results_output">${res['CRN']}</td>
-                                         <td class="course_search_results_output">${res['Email']}</td> 
-                                         <td class="course_search_results_output"><input type="hidden" value="${res['Semester']}" name="semester"><input type="hidden" value="${res['Year']}" name="year">${res['Semester'] + ' ' + res['Year']}</td> 
-                                         <td class="course_search_results_output">${res['Location']}</td>
-                                         <td class="course_search_results_output"><button name="Enroll" id="Enroll" type="submit">Enroll</button></td>
-                                         </tr></table></form>`;
+                //todo: convert start and end time into 24hr AM/PM format
+
+                row.innerHTML = `<form method=\"post\" action=\"../public/CourseEnrollForm.php\"><table class=\"course_enroll_table\"><tr>
+                                    <td class=\"enroll_output\">${res['Code']}</td>
+                                    <td class=\"enroll_output\">${res['SectionLetter']}</td>
+                                    <td class=\"enroll_output\">${res['Email']}</td>
+                                    <td class=\"enroll_output\">${res['StartTime']} - ${res['EndTime']}</td>
+                                    <td class=\"enroll_output\">${res['Location']}</td>
+                                    <input type=\"hidden\" value=\"${res['CRN']}\" name='sectionid' id='sectionid'/>
+                                    <td class=\"enroll_output\"><button name=\"Enroll\" id=\"Enroll\" type=\"submit\">Enroll</button></td>
+                                    </tr></table></form>`;
                 wrapper.appendChild(row);
             }
         }
         else
         {
-            wrapper.innerHTML = "No results found";
+            wrapper.innerHTML = "An error occurred finding courses.";
         }
     };
     //xhr.send(data);
