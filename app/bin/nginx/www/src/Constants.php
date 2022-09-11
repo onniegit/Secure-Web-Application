@@ -15,6 +15,8 @@ class Constants
     public static $LOGINFORM_PHP = 'LoginForm.php';
     public static $CREATEACCOUTFORM_PHP = 'CreatAcctForm.php';
     public static $USERSEARCHFORM_PHP = 'UserSearchForm.php';
+    public static $COURSESEARCHFORM_PHP = 'CourseSearchForm.php';
+    public static $COURSEENROLLFORM_PHP = 'CourseEnrollForm.php';
     public static $EDITACCOUNTFORM_PHP = 'EditAccountForm.php';
     
     //Account types

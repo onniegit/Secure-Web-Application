@@ -1,5 +1,6 @@
 <?php
 require_once "User.php";
+require_once "CSInfo.php";
 require_once "Constants.php";
 
 /*Ensures the database was initialized and obtain db link*/
@@ -7,6 +8,10 @@ require_once "Constants.php";
 $GLOBALS['dbPath'] = '../../db/persistentconndb.sqlite';
 global $db;
 $db = new SQLite3($GLOBALS['dbPath'], $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, $encryptionKey = "");
+
+$GLOBALS['backupDbPath'] = '../../db/backup.sqlite';
+global $backupDb;
+$backupDb = new SQLite3($GLOBALS['backupDbPath'], $flags = SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, $encryptionKey = "");
 
 class DBConnector
 // all database interaction is handled within this class
@@ -66,7 +71,7 @@ class DBConnector
         if ($results)
         {
             //backup database
-            $GLOBALS['db']->backup($GLOBALS['db'], "temp", $GLOBALS['dbPath']);
+            $GLOBALS['db']->backup($GLOBALS['backupDb'], "temp", $GLOBALS['backupDbPath']);
         }
 
         return $results;
@@ -221,7 +226,7 @@ class DBConnector
         $stmt->bindParam(':un', $un);
         $results = $stmt->execute();
 
-        $GLOBALS['db']->backup($GLOBALS['db'], "temp", $GLOBALS['dbPath']);
+        $GLOBALS['db']->backup($GLOBALS['backupDb'], "temp", $GLOBALS['backupDbPath']);
     }
 
     public static function SaveGrade($crn) // input has been validated before this method is called
@@ -236,7 +241,7 @@ class DBConnector
             $GLOBALS['db']->exec($query);
         }
 
-        $GLOBALS['db']->backup($GLOBALS['db'], "temp", $GLOBALS['dbPath']);
+        $GLOBALS['db']->backup($GLOBALS['backupDb'], "temp", $GLOBALS['backupDbPath']);
 
         fclose($handle);
     }
@@ -300,10 +305,130 @@ class DBConnector
         return $results = $stmt->execute();
     }
 
+    public static function enroll($email, $sectionId)
+    {
+        try{
+            
+            /*Obtain UserID from db*/
+            $query = "SELECT UserID FROM User WHERE Email = '$email'";
+            $userid = $GLOBALS['db']->querySingle($query);
+        
+            /*Enroll user into course*/
+            $query = "INSERT INTO Enrollment
+                            VALUES ('$sectionId','$userid')";
+            $results = $GLOBALS['db']->exec($query);
+        
+            //is true on success and false on failure
+            if($results)
+            {
+                //backup database
+                $GLOBALS['db']->backup($GLOBALS['backupDb'], "temp", $GLOBALS['backupDbPath']);
+            }
+
+            return $results;
+        }
+        catch(Exception $e)
+        {
+            //prepare page for content
+            include_once "ErrorHeader.php";
+        
+            //Display error information
+            echo 'Caught exception: ',  $e->getMessage(), "<br>";
+            var_dump($e->getTraceAsString());
+            echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+        
+            $allVars = get_defined_vars();
+            debug_zval_dump($allVars);
+        }
+    }
+
+    public static function getSections($coursename, $semester, $year)
+    {
+        try {
+
+            $query = "SELECT *
+                FROM Section
+                CROSS JOIN Course ON Section.Course = Course.Code
+                INNER JOIN User ON Section.Instructor = User.UserID
+                WHERE CourseName = '$coursename' AND Semester = '$semester' AND Section.Year = '$year'";
+            
+                $results = $GLOBALS['db']->query($query);
+              
+            return $results;
+        }
+        catch(Exception $e)
+        {
+            //prepare page for content
+            include_once "ErrorHeader.php";
+        
+            //Display error information
+            echo 'Caught exception: ',  $e->getMessage(), "<br>";
+            var_dump($e->getTraceAsString());
+            echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+        
+            $allVars = get_defined_vars();
+            debug_zval_dump($allVars);
+        }
+    }
+
+    public static function searchCourse($CSInfo)
+    {
+        try {
+            /*Get information from the search request*/
+            $courseid = $CSInfo->GetCourseId();
+            $coursename = $CSInfo->GetCourseName();
+            $semester = $CSInfo->GetSemester();
+            $department = $CSInfo->GetDepartment(); 
+
+            if($courseid == "")
+            {
+                $courseid = "defaultvalue!"; 
+            }
+            if($coursename == "")
+            {
+                $coursename = "defaultvalue!";
+            }
+            if($semester == "")
+            {
+                $semester = "defaultvalue!"; 
+            }
+            if($department == "")
+            {
+                $department = "defaultvalue!";
+            }
+
+            $query = "	SELECT Section.CRN, Course.CourseName, Section.Year, Section.Semester, User.Email, Section.Location
+            FROM Section
+            CROSS JOIN Course ON Section.Course = Course.Code
+            INNER JOIN User ON Section.Instructor = User.UserID
+            WHERE (CRN LIKE '$courseid' OR '$courseid'='defaultvalue!') AND
+                    (Semester LIKE '$semester' OR '$semester'='defaultvalue!') AND
+                    (Course LIKE '$department' OR '$department'='defaultvalue!') AND
+                    (CourseName LIKE '$coursename' OR '$coursename' = 'defaultvalue!')";
+
+            $results = $GLOBALS['db']->query($query);
+              
+            return $results;
+        }
+        catch(Exception $e)
+        {
+            //prepare page for content
+            include_once "ErrorHeader.php";
+        
+            //Display error information
+            echo 'Caught exception: ',  $e->getMessage(), "<br>";
+            var_dump($e->getTraceAsString());
+            echo 'in '.'http://'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']."<br>";
+        
+            $allVars = get_defined_vars();
+            debug_zval_dump($allVars);
+        }
+    }
+
     public static function searchUser($User)
     {
         try {
-            /*Get information from the search (post) request*/
+            /*Get information from the search request*/
             $acctype = $User->GetAccType();
             $fname = $User->GetFName();
             $lname = $User->GetLName();
@@ -424,7 +549,7 @@ class DBConnector
                 throw new Exception("Create account failed");
             } else {
                 //backup database
-                $GLOBALS['db']->backup($GLOBALS['db'], "temp", $GLOBALS['dbPath']);
+                $GLOBALS['db']->backup($GLOBALS['backupDb'], "temp", $GLOBALS['backupDbPath']);
                 //redirect
                 header("Location: ../public/dashboard.php");
             }
