@@ -459,22 +459,22 @@ BEGIN TRANSACTION;
 
 /*--------------Resource Values-----------------*/
 	INSERT INTO Resource (ResourceName)
-		VALUES ('course_enroll.php');
+		VALUES ('CourseEnrollForm.php');
 	
 	INSERT INTO Resource (ResourceName)
-		VALUES ('course_search.php');
+		VALUES ('CourseSearchForm.php');
 	
 	INSERT INTO Resource (ResourceName)
 		VALUES ('CreatAcctForm.php');
 
 	INSERT INTO Resource (ResourceName)
-		VALUES ('dashboard.php');
+		VALUES ('Dashboard.php');
 	
 	INSERT INTO Resource (ResourceName)
-		VALUES ('edit_account.php');
+		VALUES ('EditAccountForm.php');
 	
 	INSERT INTO Resource (ResourceName)
-		VALUES ('enter_grades.php');
+		VALUES ('EnterGradeForm.php');
 	
 	INSERT INTO Resource (ResourceName)
 		VALUES ('ForgotPassword.php');
