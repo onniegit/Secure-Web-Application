@@ -18,6 +18,7 @@ class Constants
     public static $COURSESEARCHFORM_PHP = 'CourseSearchForm.php';
     public static $COURSEENROLLFORM_PHP = 'CourseEnrollForm.php';
     public static $EDITACCOUNTFORM_PHP = 'EditAccountForm.php';
+    public static $ENTERGRADEFORM_PHP = 'EnterGradeForm.php';
     
     //Account types
     public static $ADMIN_TYPE = "1";

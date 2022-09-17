@@ -74,9 +74,9 @@ class CourseSearchControl extends RequestController
             if($authorized)
             {
                 //validate course search data
-                $validUser = CourseSearchControl::ValidateCourseInfo($CSInfo);
+                $validInfo = CourseSearchControl::ValidateCourseInfo($CSInfo);
 
-                if($validUser == true)
+                if($validInfo == true)
                 {
                     $results = DBConnector::searchCourse($CSInfo); //search course
 
