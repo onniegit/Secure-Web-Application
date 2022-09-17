@@ -1,9 +1,44 @@
 <?php
-require_once "dashboard.php";
+require_once "Dashboard.php";
+require_once "../src/EnterGradeControl.php";
 class FacultyDashboard extends Dashboard
 {
+
+  public static function Error($ErrorCode)
+  {
+      //check the error code, display appropriate page
+      switch($ErrorCode) 
+      {
+          case Constants::$INVALID_SESSION:
+              header("Location: ../public/LoginForm.php");
+              break;
+          case Constants::$UNAUTHORIZED:
+              header("Location: ../public/FacultyDashboard.php");
+              break;
+          case Constants::$INVALID_INPUT:
+              //header("Location: ../public/CourseEnrollForm.php?input=fail");
+              break;
+          default:
+        }
+    }
+
+  public static function enterGrade()
+  {
+    //error_log("calling enter grade", 0);
+    EnterGradeControl::enterGrade();
+  }
+
 }
 FacultyDashboard::LoadPage();
+
+if ($_SERVER["REQUEST_METHOD"] == "GET") //if GET request detected
+{
+  $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+  //if request contains grade
+  if ("grade" == parse_url($url, PHP_URL_QUERY)) {
+    FacultyDashboard::enterGrade(); //call enter grade
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +79,7 @@ echo "<title>Secure ED. - Dashboard</title>";
                 <hr>
             </div>
             <div>
-              <button class="button_large" type="button" onclick="location.href='enter_grades.php'">Enter Grades</button>
+              <button class="button_large" type="button" onclick="location.href='FacultyDashboard.php?grade'">Enter Grades</button>
             </div>
             <br>
       </main>

@@ -1,5 +1,5 @@
 <?php
-require_once "dashboard.php";
+require_once "Dashboard.php";
 require_once "../src/CreateAcctControl.php";
 require_once "../src/UserSearchControl.php";
 class AdminDashboard extends Dashboard
