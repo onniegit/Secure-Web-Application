@@ -164,8 +164,7 @@ class DBConnector
 
     }
 
-    public static function UsernameExists($un) // returns true if provided username exists within the db
-
+    public static function isValidUser($un) // returns true if provided username exists within the db
     {
         $query = "SELECT * FROM User WHERE Email=:un";
         $stmt = $GLOBALS['db']->prepare($query);
@@ -177,16 +176,13 @@ class DBConnector
             $exists[] = $row;
         }
 
-        if ($exists) {
+        if ($exists)
             return true;
-        }
-
         else
             return false;
     }
 
     public static function TempUser($un) // returns a User object
-
     {
         $query = "SELECT * 
                     FROM User
@@ -217,7 +213,7 @@ class DBConnector
         return $User;
     }
 
-    public static function UpdatePasswordDB($un, $pw) // updates a user's password, backs up db
+    public static function UpdatePassword($un, $pw) // updates a user's password, backs up db
 
     {
         $query = "UPDATE User SET Password=:pw WHERE Email =:un";
@@ -302,6 +298,26 @@ class DBConnector
         $stmt->bindParam(':email', $email, SQLITE3_TEXT);
         $stmt->bindParam(':facultyrank', $facultyrank, SQLITE3_TEXT);
         return $results = $stmt->execute();
+    }
+
+    public static function getSecQuestion($email)
+    {
+            /*Obtain security question from db*/
+            $query = "SELECT SQuestion FROM User WHERE Email = '$email'";
+            $secQ = $GLOBALS['db']->querySingle($query);
+
+            return $secQ;
+        
+    }
+
+    public static function getSecAnswer($email)
+    {
+            /*Obtain security answer from db*/
+            $query = "SELECT SAnswer FROM User WHERE Email = '$email'";
+            $secA = $GLOBALS['db']->querySingle($query);
+
+            return $secA;
+        
     }
 
     public static function enroll($email, $sectionId)
