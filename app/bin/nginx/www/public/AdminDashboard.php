@@ -1,13 +1,13 @@
 <?php
 require_once "Dashboard.php";
-require_once "../src/CreateAcctControl.php";
+require_once "../src/CreateAccountControl.php";
 require_once "../src/UserSearchControl.php";
 class AdminDashboard extends Dashboard
 {
   public static function createAccount()
   {
     //error_log("calling create!", 0);
-    CreateAcctControl::createAccount();
+    CreateAccountControl::createAccount();
   }
   public static function userSearch()
   {

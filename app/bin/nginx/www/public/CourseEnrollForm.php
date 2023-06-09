@@ -25,9 +25,10 @@ class CourseEnrollForm extends Dashboard
     {
         /*Get information from the post request*/
         $sectionId = $_POST['sectionid']; 
+        $data = array($sectionId);
 
         //enroll course
-        CourseEnrollControl::sectionEnroll($sectionId);
+        CourseEnrollControl::SectionEnroll($data);
     }
 }
 CourseEnrollForm::LoadPage();

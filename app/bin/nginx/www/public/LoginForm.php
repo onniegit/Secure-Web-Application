@@ -1,21 +1,13 @@
 <?php
 require_once "../src/LoginController.php"; //include login controller
-require_once "../src/Constants.php";
 
 class LoginForm
 {
   public static function Submit()
   {
-    try
-    {
-      //call login method with username and password
-      LoginController::Login($_POST["username"], $_POST["password"]);
-  
-    }
-    catch(Exception $e)
-    {
-      echo "error2!";
-    }
+    //call login method with username and password
+    $credentials = array($_POST["username"], $_POST["password"]);
+    LoginController::Login($credentials);
   }
 
   public static function Error($ErrorCode)
@@ -29,7 +21,10 @@ class LoginForm
       case Constants::$INVALID_INPUT:
         header("Location: ../public/LoginForm.php?input=fail");
         break;
+      case Constants::$INVALID_SESSION:
+
       default:
+        header("Location: ../public/LoginForm.php");
     }
   }
 }
@@ -91,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") //if POST request detected
                     <input type="text" id="username" name="username"><br><br>
                     <label style="float: left" for="password">Password:&nbsp;&nbsp;</label>
                     <input type="password" id="password" name="password" ><br><br>
-                    <span style="float: left"><a href="ForgotPassword.php">[Forgot password?]</a></span>
+                    <span style="float: left"><a href="ForgotPwdForm.php">[Forgot password?]</a></span>
                     <input type="submit" value="Submit">
                 </form>
             </div>

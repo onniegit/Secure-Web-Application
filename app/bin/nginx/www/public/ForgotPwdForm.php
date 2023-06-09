@@ -7,8 +7,9 @@ class ForgotPwdForm
   public static function Submit()
   {
     $username = strtolower($_POST['email']);
+    $data = array($username);
     
-    ForgotPwController::ForgotPassword($username);
+    ForgotPwController::ForgotPassword($data, Constants::$USERNAME_TYPE);
   }
 
   public static function Error($ErrorCode)

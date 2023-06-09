@@ -1,6 +1,6 @@
 <?php
 require_once "dashboard.php";
-require_once "../src/CSInfo.php";
+require_once "../src/Constants.php";
 require_once "../src/CourseSearchControl.php";
 require_once "../src/CourseEnrollControl.php";
 class CourseSearchForm extends Dashboard
@@ -25,16 +25,16 @@ class CourseSearchForm extends Dashboard
 
     public static function submit()
     {
-        $CSInfo = new CSInfo(); //create object
-
         /*Get information from the post request*/
-        $CSInfo->SetCourseId($_POST['courseid']); 
-        $CSInfo->SetCourseName($_POST['coursename']);
-        $CSInfo->SetSemester($_POST['semester']);
-        $CSInfo->SetDepartment($_POST['department']);
+        $CourseCode = $_POST['courseid']; 
+        $CourseName = $_POST['coursename'];
+        $Semester = $_POST['semester'];
+        $Department = $_POST['department'];
+
+        $data = array($CourseCode, $CourseName, $Semester, $Department);
 
         //search course
-       CourseSearchControl::submit($CSInfo);
+       CourseSearchControl::submit($data);
     }
 
     public static function enroll()
@@ -43,8 +43,10 @@ class CourseSearchForm extends Dashboard
         $coursename = $_POST['coursename'];
         $semester = $_POST['semester'];
         $year = $_POST['year'];
+
+        $data = array($coursename, $semester, $year);
         
-        CourseEnrollControl::enroll($coursename, $semester, $year);
+        CourseEnrollControl::Enroll($data);
     }
 }
 CourseSearchForm::LoadPage();

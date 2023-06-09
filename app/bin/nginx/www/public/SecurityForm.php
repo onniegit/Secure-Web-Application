@@ -7,9 +7,9 @@ class SecurityForm
   public static function Submit()
   {
     $answer = strtolower($_POST['Answer']);
-    //error_log($answer, 0);
+    $data = array($answer);
     
-    ForgotPwController::Submit($answer);
+    ForgotPwController::Submit($data, Constants::$CHAR_STRING_TYPE);
   }
 
   public static function Error($ErrorCode)

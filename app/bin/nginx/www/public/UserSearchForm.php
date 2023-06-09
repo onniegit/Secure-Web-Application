@@ -1,6 +1,5 @@
 <?php
 require_once "dashboard.php";
-require_once "../src/User.php";
 require_once "../src/UserSearchControl.php";
 require_once "../src/EditAccountControl.php";
 class UserSearchForm extends Dashboard
@@ -25,33 +24,31 @@ class UserSearchForm extends Dashboard
 
     public static function submit()
     {
-        $User = new User(); //create user object
-
         /*Get information from the post request*/
-        $User->SetEmail(strtolower($_POST["email"])); //is converted to lower
-        $User->SetAccType($_POST["acctype"]);
-        $User->SetFName($_POST["fname"]);
-        $User->SetLName($_POST["lname"]);
-        $User->SetDOB($_POST["dob"]); //is already UTC
+        $Email = strtolower($_POST["email"]); //is converted to lower
+        $AccType = $_POST["acctype"];
+        $FName = $_POST["fname"];
+        $LName = $_POST["lname"];
+        $DOB = $_POST["dob"]; //is already UTC
+        $Year = "";
+        $Rank = "";
 
-        if($User->GetAccType() === "Student")
-        {
-            $User->SetYear($_POST["studentyear"]); //only if student
-        }
+        if($AccType == "Student")
+            $Year = $_POST["studentyear"]; //only if student
         else
-        {
-            $User->SetRank($_POST["facultyrank"]);  //only if faculty, ensure null otherwise
-         }
+            $Rank = $_POST["facultyrank"];  //only if faculty, ensure null otherwise
 
-        //search user
-       UserSearchControl::submit($User);
+        $userdata = array($Email, $AccType, $FName, $LName, $DOB, $Year, $Rank);
+        //search for user
+       UserSearchControl::submit($userdata);
     }
 
     public static function editAccount()
     {
         /*Get information from the post request*/
         $prevemail = strtolower($_POST['email']);
-        EditAccountControl::editAccount($prevemail);
+        $data = array($prevemail);
+        EditAccountControl::editAccount($data);
     }
 }
 UserSearchForm::LoadPage();
@@ -59,10 +56,12 @@ UserSearchForm::LoadPage();
 if ($_SERVER["REQUEST_METHOD"] == "POST") //if POST request detected
 {
     //check which form got submitted (user search or edit user)
-    if(isset($_POST["acctype"])){
+    if(isset($_POST["acctype"]))
+    {
         UserSearchForm::submit(); //call submit for user search
     }
-    else{
+    else
+    {
         UserSearchForm::editAccount(); //call submit for edit user
     }
 }
@@ -214,7 +213,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") //if POST request detected
                                     </label>
                                 </td>
                                 <td class="search_filter_input">
-                                    <input type="email" name="email" id="email">
+                                    <input type="email" name="email" id="email"><font size="3" color="red">(required)</font>
                                 </td>
 
                                 <td></td>

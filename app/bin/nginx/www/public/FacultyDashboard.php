@@ -25,7 +25,7 @@ class FacultyDashboard extends Dashboard
   public static function enterGrade()
   {
     //error_log("calling enter grade", 0);
-    EnterGradeControl::enterGrade();
+    EnterGradeControl::EnterGrade();
   }
 
 }
