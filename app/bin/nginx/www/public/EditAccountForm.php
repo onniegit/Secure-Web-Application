@@ -1,7 +1,5 @@
 <?php
-use FTP\Connection;
 require_once "dashboard.php";
-require_once "../src/User.php";
 require_once "../src/Constants.php";
 require_once "../src/EditAccountControl.php";
 
@@ -19,84 +17,93 @@ class EditAccountForm extends Dashboard
             case Constants::$UNAUTHORIZED:
                 header("Location: ../public/UserSearchForm.php");
                 break;
-            default: //everything else incl. invalid input and edit failed error codes
+            case Constants::$INVALID_INPUT:
+                header("Location: ../public/EditAccountForm.php?input");
+                break;
+            default: //everything else incl. edit failed error codes
                 header("Location: ../public/EditAccountForm.php");
                 break;
         }
     }
     public static function submit()
     {
-        $User = new User(); //create user object
-
         /*Get information from the post request*/
-        $User->SetEmail(strtolower($_POST['email'])); //is converted to lower
-        $User->SetAccType($_POST['acctype']);
-        $User->SetPassword($_POST['password']);
-        $User->SetFName($_POST['fname']);
-        $User->SetLName($_POST['lname']);
-        $User->SetDOB($_POST['dob']); //is already UTC
-        $User->SetYear($_POST['studentyear']); //only if student
-        $User->SetRank($_POST['facultyrank']);  //only if faculty, ensure null otherwise
-        $User->SetSQuestion($_POST['squestion']);
-        $User->SetSAnswer($_POST['sanswer']);
-        $User->SetPrevEmail($_POST['prevemail']);
+        $Email = strtolower($_POST["email"]); //is converted to lower
+        $AccType = $_POST["acctype"];
+        $Password = $_POST["password"];
+        $FName = $_POST["fname"];
+        $LName = $_POST["lname"];
+        $DOB = $_POST["dob"]; //is already UTC
+        $Year = $_POST["studentyear"]; //only if student
+        $Rank = $_POST["facultyrank"];  //only if faculty, ensure null otherwise
+        $SQuestion = $_POST['squestion'];
+        $SAnswer = $_POST['sanswer'];
+        $Prevemail = $_POST['prevemail'];
 
-        if($_POST['acctype'] == null)
-        {
+        if($AccType == null)
             throw new Exception("input did not exist");
-        }
         else
         {
-            /*Checking studentyear and facultyrank*/
-            if ($User->GetAccType() == Constants::$STUDENT_TYPE) {
-                $User->SetRank(null);
-            } else if ($User->GetAccType() == Constants::$FACULTY_TYPE) {
-                $User->SetYear(null);
-            }
-        }
+            if ($AccType == Constants::$STUDENT_TYPE) 
+                $Rank = null; 
+            else if ($AccType == Constants::$FACULTY_TYPE) 
+                $Year = null;
+         }
 
-        //edit user
-        EditAccountControl::submitUser($User);
+         $userdata = array($Email, $Password, $AccType, $FName, $LName, $DOB, $Year, $Rank, $SQuestion, $SAnswer, $Prevemail);
+
+        //error_log("submitting user", 0);
+         //edit user
+        EditAccountControl::submitUser($userdata);
     }
 
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") //if POST request detected
 {
+    error_log("found post", 0);
+
     //check if edit form submitted with account type
     if(isset($_POST["acctype"]))
     {
+        error_log("calling edit account submit", 0);
         EditAccountForm::submit(); //call submit for user search
     }
 }
-else{
+else
+{
+    //error_log("i see get", 0);
     $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-    if ("edit" == parse_url($url, PHP_URL_QUERY))
+    
+    $userinfo = array(); //array to hold user data if found
+
+    //error_log("setting error 0", 0);
+    $error = Constants::$NONE;
+
+    if (isset($_COOKIE['acctype']))
     {
-        $prevemail = $_COOKIE['prevemail']; //get the previous email (username searched for)
-        $userinfo = array(); //array to hold user data if found
-
-        if (isset($_COOKIE['acctype'])) {
-
-            /*Get user information from the cookie
-              $userinfo[0] left blank - pos for user id - not used
-            */
-            array_push($userinfo, "", $_COOKIE['email'], $_COOKIE['password'], $_COOKIE['fname'], $_COOKIE['lname'], 
+        //error_log("acctype is set...", 0);
+        /*Get user information from the cookie
+        $userinfo[0] left blank - pos for user id - not used
+       */
+        array_push($userinfo, "", $_COOKIE['email'], $_COOKIE['password'], $_COOKIE['fname'], $_COOKIE['lname'], 
                     $_COOKIE['dob'], $_COOKIE['studentyear'], $_COOKIE['facultyrank'], $_COOKIE['squestion'], 
-                    $_COOKIE['sanswer'], $_COOKIE['prevemail'], $_COOKIE['acctype']);
-
-            // user was found
-            $error = false;
-        }
-        else
-        {
-            // user was not found
-            $error = true;
-        }
+                    $_COOKIE['sanswer'], $_COOKIE['prevemail'], $_COOKIE['acctype']);       
     }
     else
     {
-        $error = true;
+        if ("edit" == parse_url($url, PHP_URL_QUERY))
+        {
+            // user was not found
+            error_log("setting error 6", 0);
+            $error = Constants::$USER_NOT_FOUND;
+        }
+    }
+    
+    if ("input" == parse_url($url, PHP_URL_QUERY))
+    {
+        //error_log("setting error 2", 0);
+        $error = Constants::$INVALID_INPUT;
     }
 }
 
@@ -141,14 +148,13 @@ else{
             </div>
 
             <?php
-                if ($error)
+                if ($error == 6)
                 {
-                    echo "An error has occurred finding user";
-                    echo "$prevemail";
+                    echo "An error has occurred finding user.";
                 }
-                if(!$userinfo)
+                else if($error == 2)
                 {
-                    echo "An error has occurred obtaining user info.";
+                    echo "Invalid input.";
                 }
             ?>
 
@@ -176,7 +182,7 @@ else{
                                     <label class = "edit_acc_label"> First Name: </label>
                                 </td>
                                 <td>
-                                    <input type="text" id="fname" name="fname" value="<?php if(!$error){echo "$userinfo[3]";} ?>">
+                                    <input type="text" id="fname" name="fname" value="<?php if($error == 0){echo "$userinfo[3]";} ?>">
                                 </td>
 
                                 <!--Last Name-->
@@ -184,7 +190,7 @@ else{
                                     <label class = "edit_acc_label"> Last Name: </label>
                                 </td>
                                 <td>
-                                    <input type="text" id="lname" name="lname" value="<?php if(!$error){echo "$userinfo[4]";} ?>">
+                                    <input type="text" id="lname" name="lname" value="<?php if($error == 0){echo "$userinfo[4]";} ?>">
                                 </td>
                             </tr>
 
@@ -194,7 +200,7 @@ else{
                                     <label class = "edit_acc_label"> Date of Birth: </label>
                                 </td>
                                 <td>
-                                    <input type="date" id="dob" name="dob" value="<?php if(!$error){echo $userinfo[5];} ?>">
+                                    <input type="date" id="dob" name="dob" value="<?php if($error == 0){echo $userinfo[5];} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -254,7 +260,7 @@ else{
                                     <label class = "edit_acc_label"> Email: </label>
                                 </td>
                                 <td>
-                                    <input type="email" name="email" id="email" value="<?php if(!$error){echo "$userinfo[1]";} ?>">
+                                    <input type="email" name="email" id="email" value="<?php if($error == 0){echo "$userinfo[1]";} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -270,7 +276,7 @@ else{
                                     <label class = "edit_acc_label"> Confirm Email: </label>
                                 </td>
                                 <td>
-                                    <input type="email" name="confirmemail" id="confirmemail" value="<?php if(!$error){echo $userinfo[1];} ?>">
+                                    <input type="email" name="confirmemail" id="confirmemail" value="<?php if($error == 0){echo $userinfo[1];} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -342,7 +348,7 @@ else{
                                     <label class = "edit_acc_label"> Security Question: </label>
                                 </td>
                                 <td>
-                                    <input type="text" name="squestion" value="<?php if(!$error){echo "$userinfo[8]";} ?>">
+                                    <input type="text" name="squestion" value="<?php if($error == 0){echo "$userinfo[8]";} ?>">
                                 </td>
 
                                 <!--Blank-->
@@ -358,12 +364,13 @@ else{
                                     <label class = "edit_acc_label"> Answer: </label>
                                 </td>
                                 <td>
-                                    <input type="text" name="sanswer" value="<?php if(!$error){echo "$userinfo[9]";} ?>">
+                                    <input type="text" name="sanswer" value="<?php if($error == 0){echo "$userinfo[9]";} ?>">
                                 </td>
 
                                 <!--Blank-->
                                 <td>
-                                    <input type="hidden" name="prevemail" value="<?php echo "$prevemail" ?>">
+                                    <!--<input type="hidden" name="prevemail" value="<--><!--?php echo "$prevemail" ?>">-->
+                                    <input type="hidden" name="prevemail" value="<?php if($error == 0){echo "$userinfo[10]";}?>">
                                 </td>
                                 <td>
                                 </td>
@@ -374,12 +381,98 @@ else{
                 </div>
 
                 <div style="text-align: left;">
+                    <!-- <input type="submit" value="Submit" onclick="submitAccount()">&nbsp;&nbsp;&nbsp;&nbsp; -->
                     <input type="submit" value="Submit" onclick="submitAccount()">&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="button" value="Cancel" onclick=" location.href = 'UserSearchForm.php'">
                 </div>
             </div>
         </main>
     </div>
-    <script async src = "../resources/SelectionAndSubmitDisplay.js"></script>
+    <!-- <script async src = "../resources/SelectionAndSubmitDisplay.js"></script> -->
+    <script>
+        function swapselection() //changes the value entry based on faculty or student
+        {
+            //get elements from page
+            var studentselect = document.getElementById("studentyear");
+            var facultyselect = document.getElementById("facultyrank");
+            var acctype = document.getElementById("acctype");
+            var positionlabel = document.getElementById("positionlabel");
+
+            //change parts of page depending on student or faculty
+            if(acctype.options[acctype.selectedIndex].text === "Faculty")
+            {
+            studentselect.style.display = "none";
+            facultyselect.style.display = "inline";
+            positionlabel.innerText = "Rank:";
+            }
+            else
+            {
+            studentselect.style.display = "inline";
+            facultyselect.style.display = "none";
+            positionlabel.innerText = "Year:";
+            }
+        }
+
+        function submitAccount() //checks for basic errors when submitting
+        {
+            //get elements from page
+            var pass = document.getElementById("password");
+            var confirmpass = document.getElementById("confirmpassword");
+            var email = document.getElementById("email");
+            var confirmemail = document.getElementById("confirmemail");
+            var submiterror = document.getElementById("submiterror");
+            var accform = document.getElementById("accform");
+            var cansubmit = true;
+
+            try
+            {
+                while (submiterror.removeChild(submiterror.childNodes[0]) !== null)
+                {
+                //tries to remove all previous error messages if they exist
+                }
+            }
+            catch
+            {
+                //succeeds when it throws exception
+            }
+
+            //reset the element for errors to a default state
+            submiterror.innerText = "";
+            submiterror.style.display = "none";
+
+            //check if pass is empty
+            if(pass.value === "")
+            {
+                cansubmit = false;
+                submiterror.innerText = "Password is empty. \n";
+                submiterror.style.display = "block";
+            }
+            //check if pass and confirm pass are not the same
+            if (pass.value !== confirmpass.value)
+            {
+                cansubmit = false;
+                submiterror.innerText = submiterror.innerText.concat("Password and Confirm Password are not the same. \n");
+                submiterror.style.display = "block";
+            }
+            //check if email is empty
+            if(email.value === "")
+            {
+                cansubmit = false;
+                submiterror.innerText = submiterror.innerText.concat("Email is empty. \n");
+                submiterror.style.display = "block";
+            }
+            //check if email and confirmemail are not the same
+            if (email.value !== confirmemail.value)
+            {
+                cansubmit = false;
+                submiterror.innerText = submiterror.innerText.concat("Email and Confirm Email are not the same. \n");
+                submiterror.style.display = "block";
+            }
+            if(cansubmit)
+            {
+                accform.submit();
+            }
+        }
+    </script>
 </body>
 </html>
