@@ -2,7 +2,7 @@
 session_start(); //session data for display purposes only
 
 /*Get DB connection*/
-require_once "../src/DBConnector.php";
+require_once "../src/DBController.php";
 ?>
 
 <head>
