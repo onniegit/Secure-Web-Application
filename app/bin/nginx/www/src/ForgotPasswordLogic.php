@@ -5,12 +5,13 @@ session_start();
 //store username in session array
 $_SESSION['email'] = $_POST['email'];
 
-try {
+try 
+{
     require_once "../src/ForgotPwController.php";
+    $data = array(strtolower($_POST['email']));
 
-    ForgotPwController::ForgotPassword(strtolower($_POST['email']));
-    }
-
+    ForgotPwController::ForgotPassword($data, Constants::$USERNAME_TYPE);
+}
 catch(Exception $e)
 {
     //prepare page for content

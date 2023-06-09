@@ -1,135 +1,83 @@
 <?php
-require_once "RequestController.php";
+require_once "SecurityTemplate.php";
 require_once "DBConnector.php";
-require_once "Constants.php";
-require_once "CSInfo.php";
+require_once "LogoutController.php";
 
-class CourseSearchControl extends RequestController
+class CourseSearchControl extends SecurityTemplate
 {
     public static function courseSearch()
     {
-        //error_log("authenticating..", 0);
-        $validSession = CourseSearchControl::authenticateSession();
-        if($validSession)
+        $secResult = self::SecurityCheck(array(null, null), Constants::$COURSESEARCHFORM_PHP, null, null);
+
+        if($secResult === true)
+            header("Location: ../public/CourseSearchForm.php");
+        else
+            self::ReturnError($secResult);
+    }
+
+    public static function ReturnError($errorCode)
+    {
+        switch ($errorCode)
         {
-            $un = $_SESSION['email'];
-            //error_log($un, 0);
-            //check user is authorized for requested function
-            $authorized = CourseSearchControl::authorize($un, Constants::$COURSESEARCHFORM_PHP);
-            if($authorized)
+            case Constants::$INVALID_INPUT: //invalid input
+                CourseSearchForm::Error(Constants::$INVALID_INPUT);
+                break;
+            case Constants::$UNAUTHORIZED: //unauthorized user - needs to ba a different form
+
+            case Constants::$INVALID_SESSION: //invalid session - needs to ba a different form
+
+            default:
+                LogoutController::Logout();  //initiate logout on invalid session || unauthorized
+        }
+    }
+    
+    public static function Submit($data, $dataType = 8) //Constants::$COURSE_SEARCH_TYPE = 8
+    {
+        $secResult = self::SecurityCheck(array(null, null), Constants::$COURSESEARCHFORM_PHP, $data, $dataType);
+
+        if($secResult === true)
+        {
+            $results = DBConnector::SearchCourse($data); //search course
+
+            //is true on success and false on failure
+            if($results->fetchArray(SQLITE3_ASSOC))
             {
-                header("Location: ../public/CourseSearchForm.php");
+                //error_log("results found", 0);
+
+                /*store course search info in cookie for later retrieval and search in CourseSearchLogic.php*/
+
+                if($data[0] != "")
+                    setcookie('courseid', $data[0], time() + (86400 / 24), "/"); // 86400 = 1 day, "/" = cookie is available in entire website
+                else
+                    setcookie('courseid', " ", time() + (86400 / 24), "/");
+
+                if($data[1] != "")
+                    setcookie('coursename', $data[1], time() + (86400 / 24), "/");
+                else
+                    setcookie('coursename', " ", time() + (86400 / 24), "/");
+                        
+                if($data[2] != "")
+                    setcookie('semester', $data[2], time() + (86400 / 24), "/");
+                else
+                    setcookie('semester', " ", time() + (86400 / 24), "/");
+
+                if($data[3] != "")
+                    setcookie('department', $data[3], time() + (86400 / 24), "/");
+                else
+                    setcookie('department', " ", time() + (86400 / 24), "/");
             }
             else
             {
-                //error_log("not authorized", 0);
+                //error_log("no results found", 0);
+                //set to -1 to prevent another search in CourseSearchLogic.php
+                setcookie('courseid', "-1", time() + (86400 / 24), "/");
             }
-        }
-        else
-        {
-            //invalid session
-            //error_log("invalid session", 0);
-        }
-    }
-
-    public static function ValidateCourseInfo(&$CSInfo) // validates given search data
-    {
-        //still needs more input validation
-
-        //validate course id
-        if($CSInfo->GetCourseId() != ""){
-            $courseid = CourseSearchControl::XssValidation($CSInfo->GetCourseId()); //to prevent XSS
-            $CSInfo->SetCourseId($courseid);
-        }
-
-        //validate course name
-        if($CSInfo->GetCourseName() != ""){
-            $cname = CourseSearchControl::XssValidation($CSInfo->GetCourseName()); //to prevent XSS
-            $CSInfo->SetCourseName($cname);
-        }
-
-        //validate department
-        if($CSInfo->GetDepartment() != ""){
-            $department = CourseSearchControl::XssValidation($CSInfo->GetDepartment()); //to prevent XSS
-            $CSInfo->SetDepartmente($department);
-        }
-
-        //validate semester
-        if($CSInfo->GetSemester() != ""){
-            $semester = CourseSearchControl::XssValidation($CSInfo->GetSemester()); //to prevent XSS
-            $CSInfo->SetSemester($semester);
-        }
-        
-        return true;
-    }
-    
-    public static function submit($CSInfo)
-    {
-        $validSession = CourseSearchControl::authenticateSession();
-        if($validSession)
-        {
-            $un = $_SESSION['email'];
-            //check user is authorized for requested function
-            $authorized = CourseSearchControl::authorize($un, Constants::$COURSESEARCHFORM_PHP);
-            if($authorized)
-            {
-                //validate course search data
-                $validInfo = CourseSearchControl::ValidateCourseInfo($CSInfo);
-
-                if($validInfo == true)
-                {
-                    $results = DBConnector::searchCourse($CSInfo); //search course
-
-                    //is true on success and false on failure
-                    if($results->fetchArray(SQLITE3_ASSOC))
-                    {
-                        //error_log("results found", 0);
-
-                        /*store course search info in cookie for later retrieval and search in CourseSearchLogic.php*/
-                        if($CSInfo->GetCourseId() != "")
-                            setcookie('courseid', $CSInfo->GetCourseId(), time() + (86400 / 24), "/"); // 86400 = 1 day, "/" = cookie is available in entire website
-                        else
-                            setcookie('courseid', " ", time() + (86400 / 24), "/");
-
-                        if($CSInfo->GetCourseName() != "")
-                            setcookie('coursename', $CSInfo->GetCourseName(), time() + (86400 / 24), "/");
-                        else
-                            setcookie('coursename', " ", time() + (86400 / 24), "/");
-                        
-                        if($CSInfo->GetSemester() != "")
-                            setcookie('semester', $CSInfo->GetSemester(), time() + (86400 / 24), "/");
-                        else
-                            setcookie('semester', " ", time() + (86400 / 24), "/");
-
-                        if($CSInfo->GetDepartment() != "")
-                            setcookie('department', $CSInfo->GetDepartment(), time() + (86400 / 24), "/");
-                        else
-                            setcookie('department', " ", time() + (86400 / 24), "/");
-                    }
-                    else
-                    {
-                        error_log("no results found", 0);
-                        //set to -1 to prevent another search in CourseSearchLogic.php
-                        setcookie('courseid', "-1", time() + (86400 / 24), "/");
-                    }
                     
-                    //load search form to search and display any search results
-                    header("Location: ../public/CourseSearchForm.php?search");
-                }
-                else
-                {
-                    //invalid user
-                    //error_log("invalid user", 0);
-                    CourseSearchForm::Error(Constants::$INVALID_INPUT);
-                }
-            }
+            //load search form to search and display any search results
+            header("Location: ../public/CourseSearchForm.php?search");
         }
         else
-        {
-            //invalid session
-            //error_log("invalid session", 0);
-            CourseSearchForm::Error(Constants::$INVALID_SESSION);
-        }
+            self::ReturnError($secResult);
     }
 }
 

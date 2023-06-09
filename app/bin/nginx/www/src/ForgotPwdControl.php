@@ -1,23 +1,25 @@
 <?php
 require_once "../src/DBConnector.php";
 require_once "../src/User.php";
-require_once "../src/RequestController.php";
-require_once "../src/Constants.php";
+require_once "../src/SecurityTemplate.php";
 
-class ForgotPwController extends RequestController
+class ForgotPwController extends SecurityTemplate
 {   
-    public static function ForgotPassword($un) // if provided username exists, redirects user to answer their security question
+    public static function ForgotPassword($data, $dataType) // if provided username exists, redirects user to answer their security question
     {
-        $validUsername = ForgotPwController::ValidateEmail($un);
-        if ($validUsername == true)
+        $validData = self::SecurityCheck(null, null, $data, $dataType);
+
+        if ($validData == true)
         {
+            $username = $data[0];
+
             //get security question
-            $secQ = DBConnector::getSecQuestion($un);
+            $secQ = DBConnector::GetSecQuestion($username);
 
             if ($secQ != null)
             {
                 //store username and security question in cookie
-                setcookie('username', $un, time() + (86400 / 24), "/");
+                setcookie('username', $username, time() + (86400 / 24), "/");
                 setcookie('secquestion', $secQ, time() + (86400 / 24), "/");
                 
                 header("Location:../public/SecurityForm.php");
@@ -29,58 +31,48 @@ class ForgotPwController extends RequestController
             header("Location: ../public/ForgotPassword.php?emailcheck=fail");
     }
 
-    public static function ValidateAnswer($answer)
+    public static function Submit($data, $dataType) // checks the provided answer against the answer stored in the db
     {
-        return ForgotPwController::XssValidation($answer);
-    }
+        $validData = self::SecurityCheck(null, null, $data, $dataType);
 
-    public static function Submit($answer) // checks the provided answer against the answer stored in the db
-    {
-        $un = $_COOKIE['username'];
-        $userInput = ForgotPwController::ValidateAnswer($answer);
-        
-        //get security answer
-        $myAnswer = DBConnector::getSecAnswer($un);
-        $myAnswer = strtolower($myAnswer);
-
-        if ($userInput == $myAnswer)
-            header("Location:../public/PasswordForm.php");
-        else 
-            header("Location:../public/SecurityForm.php?answercheck=fail");
-    }
-
-    public static function getSecQ($un) // returns the user's security question (used to display to form)
-    {
-        $User = DBConnector::GetUser($un);
-        
-        if($User != null)
+        if($validData)
         {
-            return $User->GetSQuestion();
-        }
-        
-        return null;
+            $username = $_COOKIE['username'];
+            $answer = $data[0]; //get user's response
+
+            //get security answer from DB
+            $existingAnswer = DBConnector::getSecAnswer($username);
+            $existingAnswer = strtolower($existingAnswer);
+
+            if ($answer == $existingAnswer)
+                header("Location:../public/PasswordForm.php");
+            else 
+                header("Location:../public/SecurityForm.php?answercheck=fail");
+        }   
     }
 
-    public static function ChangePassword($password, $confirmPassword) // validates that input meets complexity requirements and inputs match, sends to dbconnector for updating
+    public static function ChangePassword($data, $dataType) // validates that input meets complexity requirements and inputs match, sends to dbconnector for updating
     {
-        $un = $_COOKIE['username'];
+        $validData = self::SecurityCheck(null, null, $data, $dataType);
 
-        if ($password != null && $confirmPassword == $password) //if passwords match
+        if ($validData == true)
         {
-            $validPwd = ForgotPwController::ValidatePassword($password);
+            $username = $_COOKIE['username'];
+            $password = $data[0];
+            $confirmPassword = $data[1];
 
-            if ($validPwd == true)
+            if ($password != null && $confirmPassword == $password) //if passwords match
             {
                 $hashedNewPassword = hash(Constants::$PASSWORD_HASH, $password);
 
-                DBConnector::UpdatePassword($un, $hashedNewPassword);
+                DBConnector::UpdatePassword($username, $hashedNewPassword);
 
-                header("Location: ../public/LoginForm.php");
+                header("Location: ../public/LoginForm.php");               
             }
             else
-                header("Location: ../public/PasswordForm.php?passwordcheck=fail");        
+                header("Location: ../public/PasswordForm.php?passwordcheck=fail");
         }
         else
-            header("Location: ../public/PasswordForm.php?passwordcheck=fail");
+            header("Location: ../public/PasswordForm.php?passwordcheck=fail");     
     }
 }

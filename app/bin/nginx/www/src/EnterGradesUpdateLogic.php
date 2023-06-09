@@ -3,10 +3,13 @@ require_once "../src/EnterGradeControl.php";
 
 session_start(); // required to bring session variables into context
 
-try {
-    if (isset($_POST['submit'])) // passes the session and crn to enter grade control for processing
+try
+{
+    if (isset($_POST['submit']) && isset($_POST['crn'])) // passes the section # (crn) to enter grade control for processing
     {
-        EnterGradeControl::EnterGrade(isset($_SESSION['email']), $_POST['crn']);
+        $data = array($_POST['crn']);
+
+        EnterGradeControl::submitGrade($data);
     }
 }
 catch(Exception $e)

@@ -1,7 +1,20 @@
 <?php
-try {
-    /*Get DB connection*/
-    require_once "../src/DBController.php";
+error_log("attempting..", 0);
+/*Get DB connection*/
+require_once "../src/DBConnector.php";
+
+try
+{
+
+    if (isset($_POST['submit']) && isset($_POST['crn'])) // passes the section # (crn) to enter grade control for processing
+    {
+        error_log("here", 0);
+        $data = array($_POST['crn']);
+
+        EnterGradeControl::submitGrade($data);
+    }
+    else
+        error_log("in pdate", 0);
 
     /*Get information from the search (post) request*/
     $acctype = $_POST['acctype'];
@@ -16,7 +29,7 @@ try {
     $sanswer = $_POST['sanswer'];
     $prevemail = $_POST['prevemail']; //required to find the user being updated
 
-
+    error_log($fname, 0);
     if($acctype==null)
     {throw new Exception("input did not exist");}
 
@@ -27,7 +40,7 @@ try {
         $studentyear = null;
     }
 
-
+    error_log("performing update", 0);
     /*Update the database with the new info*/
     $query = "UPDATE User 
             SET Email = :email, Password = :password, FName = :fname, LName = :lname, DOB = :dob, Year = :studentyear, Rank = :facultyrank, SQuestion = :squestion, SAnswer = :sanswer 
@@ -87,3 +100,4 @@ catch(Exception $e)
     $allVars = get_defined_vars();
     debug_zval_dump($allVars);
 }
+?>

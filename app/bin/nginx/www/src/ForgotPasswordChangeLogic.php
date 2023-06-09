@@ -4,7 +4,7 @@ session_start();
 try {
     require_once "../src/ForgotPwController.php";
 
-    ForgotPwController::UpdatePassword($_SESSION['email'], $_POST["newpassword"], $_POST["confirmpassword"]);
+    //ForgotPwController::UpdatePassword($_SESSION['email'], $_POST["newpassword"], $_POST["confirmpassword"]);
 }
 
 catch(Exception $e)

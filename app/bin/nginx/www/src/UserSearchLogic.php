@@ -4,43 +4,45 @@ require_once "DBConnector.php";
 try {
 
     global $jsonArray;
-    $User = new User(); //create user object
 
     //if previous search in UserSearchControl.php found some data
     if (isset($_COOKIE['acctype']) && $_COOKIE['acctype'] != null) {
         /*Get search information from the cookie*/
 
-        $User->SetAccType($_COOKIE['acctype']);
+        $AccType = $_COOKIE['acctype'];
+        $Year = "";
+        $Rank = "";
 
         if(isset($_COOKIE['email']))
-            $User->SetEmail($_COOKIE['email']);
+            $Email = $_COOKIE['email'];
         else
-            $User->SetEmail("");
+            $Email ="";
         
         
         if(isset($_COOKIE['fname']))
-            $User->SetFName($_COOKIE['fname']);
+            $FName = $_COOKIE['fname'];
         else
-            $User->SetFName("");
+            $FName = "";
         
         if(isset($_COOKIE['lname']))
-            $User->SetLName($_COOKIE['lname']);
+            $LName = $_COOKIE['lname'];
         else
-            $User->SetLName("");
+            $LName = "";
         
         if(isset($_COOKIE['dob']))
-            $User->SetDOB($_COOKIE['dob']);
+            $DOB = $_COOKIE['dob'];
         else
-            $User->SetDOB("");
+            $DOB = "";
 
-        if ($User->GetAccType() === "Student") {
-            $User->SetYear($_COOKIE['studentyear']); //only if student
+        if ($AccType == "Student") {
+            $Year = $_COOKIE['studentyear']; //only if student
         }
         else {
-            $User->SetRank($_COOKIE['facultyrank']); //only if faculty, ensure null otherwise
+            $Rank = $_COOKIE['facultyrank']; //only if faculty, ensure null otherwise
         }
 
-        $results = DBConnector::searchUser($User); //search user    
+        $userdata = array($Email, $AccType, $FName, $LName, $DOB, $Year, $Rank);
+        $results = DBConnector::searchUser($userdata); //search user    
 
         while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
             $jsonArray[] = $row;

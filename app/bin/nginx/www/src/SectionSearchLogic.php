@@ -4,6 +4,9 @@ require_once "DBConnector.php";
 try {
 
     global $jsonArray;
+    $coursename = "";
+    $semester = "";
+    $year = "";
 
     //if previous search in CourseEnrollControl.php found some data
     if(isset($_COOKIE['coursename']) && $_COOKIE['coursename'] != " ")
@@ -15,7 +18,8 @@ try {
     if(isset($_COOKIE['year']) && $_COOKIE['year'] != " ")
         $year = $_COOKIE['year'];
         
-    $results = DBConnector::getSections($coursename, $semester, $year); //search course sections
+    $searchData = array(Constants::$COURSE_ENROLL_TYPE, $coursename, $semester, $year);
+    $results = DBConnector::getSections($searchData); //search course sections
 
     while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
         $jsonArray[] = $row;

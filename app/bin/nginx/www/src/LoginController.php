@@ -1,71 +1,67 @@
 <?php
-require_once "User.php";
-require_once "RequestController.php";
+require_once "SecurityTemplate.php";
+require_once "UsernameTypeValidator.php";
 require_once "../public/LoginForm.php";
-require_once "Constants.php";
 
 global $acctype;
 
-class LoginController extends RequestController
+class LoginController extends SecurityTemplate
 {
-    public static function Login($un, $pw)
+    //call Login with Constants::$LOGIN_TYPE (constant 1) as default value
+    public static function Login($data, $dataType = 1)
     {
-        $inputValidation = RequestController::ValidateInput($un, $pw); //Validate Input
+        //validate input, not session validation and access control check needed
+        $validData = self::SecurityCheck(null, null, $data, $dataType);
+        
+        if($validData == true)
+        {
+            //error_log("valid data", 0);
 
-        if ($inputValidation == true) {
-            
-            $User = DBConnector::GetUser($un); //GetUser() -> User
+            //authenticate user
+            $validUSer = self::SecurityCheck($data, null, null, null);
 
-            if ($User != null) {
-                //Validate User's credentials
-                $validUser = LoginController::ValidateCredentials($User, $pw);
-
-                //check user is authorized for requested function
-                $authorized = LoginController::authorize($un, Constants::$LOGINFORM_PHP);
-
-                if ($validUser == true and $authorized)
+            if($validUSer === true)
+            {
+                if (self::IsAccountType(Constants::$FACULTY_TYPE)) 
                 {
-                    //create user session
-                    LoginController::CreateSession($un, $User->GetAccType());
-
-                    if (RequestController::HasRights(Constants::$FACULTY_TYPE)) {
-                        //error_log("found faculty!", 0);
-                        header("Location: ../public/FacultyDashboard.php");
-                    }
-                    elseif (RequestController::HasRights(Constants::$ADMIN_TYPE)) {
-                        //error_log("found admin!", 0);
-                        header("Location: ../public/AdminDashboard.php");
-                    }
-                    elseif (RequestController::HasRights(Constants::$STUDENT_TYPE)) {
-                        //error_log("found student!", 0);
-                        header("Location: ../public/StudentDashboard.php");
-                    }
+                   //error_log("found faculty!", 0);
+                    header("Location: ../public/FacultyDashboard.php");
                 }
-                else // invalid user credentials or unauthorized
+                elseif (self::IsAccountType(Constants::$ADMIN_TYPE)) 
                 {
-                    LoginForm::Error(Constants::$INVALID_CREDENTIALS);
+                    //error_log("found admin!", 0);
+                    header("Location: ../public/AdminDashboard.php");
+                }
+                elseif (self::IsAccountType(Constants::$STUDENT_TYPE)) 
+                {
+                    //error_log("found student!", 0);
+                    header("Location: ../public/StudentDashboard.php");
                 }
             }
             else
-            {
-                error_log("user not found!", 0);
-            }
+                LoginForm::Error(Constants::$INVALID_CREDENTIALS); //user not found
         }
         else
             LoginForm::Error(Constants::$INVALID_INPUT);
     }
 
-    function ValidateCredentials($User, $pw) // verifies correctness of username and password
-
+    private static function IsAccountType($acctype)
     {
-        $userPword = $User->GetPassword();
+        //session_start();
+        //Check if PHP session has already started
+        if(session_id() == '')
+        {
+            session_start(); //resume session
+         }
 
-        $hashedInputPword = hash(Constants::$PASSWORD_HASH, $pw);
-
-        if ($hashedInputPword == $userPword) {
+        if (isset($_SESSION['acctype']) && $_SESSION['acctype'] == $acctype)
+        {
             return true;
         }
-        else
+        else 
+        {
             return false;
+        }
     }
 }
+?>

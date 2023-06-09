@@ -3,8 +3,9 @@ session_start();
 
 try{
     require_once "../src/ForgotPwController.php";
+    $data = array(strtolower($_POST['Answer']));
 
-    ForgotPwController::SecurityQuestion($_SESSION['email'], $_POST["Answer"]);
+    ForgotPwController::Submit($data, constants::$CHAR_STRING_TYPE);
 }
 
 catch(Exception $e)

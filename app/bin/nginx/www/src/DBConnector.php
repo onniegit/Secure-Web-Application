@@ -1,6 +1,5 @@
 <?php
 require_once "User.php";
-require_once "CSInfo.php";
 require_once "Constants.php";
 
 /*Ensures the database was initialized and obtain db link*/
@@ -18,19 +17,19 @@ class DBConnector
 // prepared statements are used throughout to prevent SQL injection
 {
     
-    public static function updateUser($User)
+    public static function updateUser($userdata)
     {
-        $acctype = $User->GetAccType();
-        $email = $User->GetEmail();
-        $password = hash(Constants::$PASSWORD_HASH, $User->GetPassword());
-        $fname = $User->GetFName();
-        $lname = $User->GetLName();
-        $dob = $User->GetDOB(); 
-        $studentyear = $User->GetYear(); 
-        $facultyrank = $User->GetRank(); 
-        $squestion = $User->GetSQuestion();
-        $sanswer = $User->GetSAnswer();
-        $prevemail = $User->GetPrevEmail();
+        $email = $userdata[0];
+        $password = hash(Constants::$PASSWORD_HASH, $userdata[1]); //convert password to 80 byte hash using ripemd256 before saving
+        $acctype = $userdata[2];
+        $fname = $userdata[3];
+        $lname = $userdata[4];
+        $dob = $userdata[5];
+        $studentyear = $userdata[6]; 
+        $facultyrank = $userdata[7]; 
+        $squestion = $userdata[8];
+        $sanswer = $userdata[9];
+        $prevemail = $userdata[10];
         
         /*Update the database with the new info*/
         $query = "UPDATE User 
@@ -77,8 +76,10 @@ class DBConnector
         return $results;
     }
 
-    public static function GetUser($un) // returns a User object from the database
+    public static function GetAccount($data) // returns a User object from the database
     {
+        $un = $data[0];
+        //error_log($un, 0);
         $query = "SELECT * 
                     FROM User
                     INNER JOIN UserRole ON User.UserID = UserRole.uid
@@ -93,7 +94,8 @@ class DBConnector
                 $row['Year'], $row['Rank'], $row['SQuestion'], $row['SAnswer']);
         }
 
-        if ($userinfo) {
+        if ($userinfo) 
+        {
             $User = new User();
             $User->SetEmail($userinfo[1]);
             $User->SetAccType($userinfo[2]);
@@ -122,8 +124,7 @@ class DBConnector
         return null; 
     }
 
-    public static function CheckRights($un, $res) // returns true if provided username has access rights for requested resource
-
+    public static function GetRights($un, $res) // returns true if provided username has access rights for requested resource
     {
         $query = "SELECT * 
                     FROM User
@@ -156,15 +157,15 @@ class DBConnector
 
         // if there is an access right for the given role
         if ($exists) {
-            return true;
+            return $exists;
         }
 
         else
-            return false;
+            return null;
 
     }
 
-    public static function isValidUser($un) // returns true if provided username exists within the db
+    public static function IsSafeUser($un) // returns true if provided username exists within the db
     {
         $query = "SELECT * FROM User WHERE Email=:un";
         $stmt = $GLOBALS['db']->prepare($query);
@@ -225,8 +226,10 @@ class DBConnector
         $GLOBALS['db']->backup($GLOBALS['backupDb'], "temp", $GLOBALS['backupDbPath']);
     }
 
-    public static function SaveGrade($crn) // input has been validated before this method is called
+    public static function SaveGrade($data) // input has been validated before this method is called
     {
+        $crn = $data[0];
+
         $handle = fopen(($_FILES['file']['tmp_name']), "r"); //sets a read-only pointer at beginning of file
         $path = pathinfo($_FILES['file']['name']); //path info for file
 
@@ -320,9 +323,11 @@ class DBConnector
         
     }
 
-    public static function enroll($email, $sectionId)
+    public static function enroll($email, $data)
     {
         try{
+
+            $sectionId = $data[0];
             
             /*Obtain UserID from db*/
             $query = "SELECT UserID FROM User WHERE Email = '$email'";
@@ -357,19 +362,23 @@ class DBConnector
         }
     }
 
-    public static function getSections($coursename, $semester, $year)
+    public static function getSections($courseData)
     {
         try {
 
-            $query = "SELECT *
-                FROM Section
-                CROSS JOIN Course ON Section.Course = Course.Code
-                INNER JOIN User ON Section.Instructor = User.UserID
-                WHERE CourseName = '$coursename' AND Semester = '$semester' AND Section.Year = '$year'";
+                $coursename = $courseData[0];
+                $semester = $courseData[1];
+                $year = $courseData[2];
+
+                $query = "SELECT *
+                    FROM Section
+                    CROSS JOIN Course ON Section.Course = Course.Code
+                    INNER JOIN User ON Section.Instructor = User.UserID
+                    WHERE CourseName = '$coursename' AND Semester = '$semester' AND Section.Year = '$year'";
             
                 $results = $GLOBALS['db']->query($query);
               
-            return $results;
+                return $results;
         }
         catch(Exception $e)
         {
@@ -386,44 +395,37 @@ class DBConnector
         }
     }
 
-    public static function searchCourse($CSInfo)
+    public static function searchCourse($courseInfo)
     {
-        try {
-            /*Get information from the search request*/
-            $courseid = $CSInfo->GetCourseId();
-            $coursename = $CSInfo->GetCourseName();
-            $semester = $CSInfo->GetSemester();
-            $department = $CSInfo->GetDepartment(); 
+        try 
+        {
+                /*Get information from the search request*/
+                $courseid = $courseInfo[0];
+                $coursename = $courseInfo[1];
+                $semester = $courseInfo[2];
+                $department = $courseInfo[3]; 
 
-            if($courseid == "")
-            {
-                $courseid = "defaultvalue!"; 
-            }
-            if($coursename == "")
-            {
-                $coursename = "defaultvalue!";
-            }
-            if($semester == "")
-            {
-                $semester = "defaultvalue!"; 
-            }
-            if($department == "")
-            {
-                $department = "defaultvalue!";
-            }
+                if($courseid == "")
+                    $courseid = "defaultvalue!"; 
+                if($coursename == "")
+                    $coursename = "defaultvalue!";
+                if($semester == "")
+                    $semester = "defaultvalue!"; 
+                if($department == "")
+                    $department = "defaultvalue!";
 
-            $query = "	SELECT Section.CRN, Course.CourseName, Section.Year, Section.Semester, User.Email, Section.Location
-            FROM Section
-            CROSS JOIN Course ON Section.Course = Course.Code
-            INNER JOIN User ON Section.Instructor = User.UserID
-            WHERE (CRN LIKE '$courseid' OR '$courseid'='defaultvalue!') AND
-                    (Semester LIKE '$semester' OR '$semester'='defaultvalue!') AND
-                    (Course LIKE '$department' OR '$department'='defaultvalue!') AND
-                    (CourseName LIKE '$coursename' OR '$coursename' = 'defaultvalue!')";
+                $query = "	SELECT Section.CRN, Course.CourseName, Section.Year, Section.Semester, User.Email, Section.Location
+                FROM Section
+                CROSS JOIN Course ON Section.Course = Course.Code
+                INNER JOIN User ON Section.Instructor = User.UserID
+                WHERE (CRN LIKE '$courseid' OR '$courseid'='defaultvalue!') AND
+                        (Semester LIKE '$semester' OR '$semester'='defaultvalue!') AND
+                        (Course LIKE '$department' OR '$department'='defaultvalue!') AND
+                        (CourseName LIKE '$coursename' OR '$coursename' = 'defaultvalue!')";
 
-            $results = $GLOBALS['db']->query($query);
-              
-            return $results;
+                $results = $GLOBALS['db']->query($query);
+                
+                return $results;
         }
         catch(Exception $e)
         {
@@ -440,17 +442,17 @@ class DBConnector
         }
     }
 
-    public static function searchUser($User)
+    public static function searchUser($userdata)
     {
         try {
             /*Get information from the search request*/
-            $acctype = $User->GetAccType();
-            $fname = $User->GetFName();
-            $lname = $User->GetLName();
-            $dob = $User->GetDOB(); //is already UTC
-            $email = $User->GetEmail();
-            $studentyear = $User->GetYear(); //only if student, ensure null otherwise (must be a number)
-            $facultyrank = $User->GetRank(); //only if faculty, ensure null otherwise
+            $email = $userdata[0];
+            $acctype = $userdata[1];
+            $fname = $userdata[2];
+            $lname = $userdata[3];
+            $dob = $userdata[4]; //is already UTC
+            $studentyear = $userdata[5]; //only if student, ensure null otherwise (must be a number)
+            $facultyrank = $userdata[6]; //only if faculty, ensure null otherwise
 
             if($acctype==null)
             {
@@ -458,23 +460,25 @@ class DBConnector
                 return;
             }
 
+            //error_log($acctype, 0);
+
             //handle blank values
-            if ($fname === "") {
+            if ($fname == "") {
                 $fname = "defaultvalue!";
             }
-            if ($lname === "") {
+            if ($lname == "") {
                 $lname = "defaultvalue!";
             }
-            if ($dob === "") {
+            if ($dob == "") {
                 $dob = "defaultvalue!";
             }
-            if ($email === "") {
+            if ($email == "") {
                 $email = "defaultvalue!";
             }
-            if ($studentyear === "") {
+            if ($studentyear == "") {
                 $studentyear = "defaultvalue!";
             }
-            if ($facultyrank === "") {
+            if ($facultyrank == "") {
                 $facultyrank = "defaultvalue!";
             }
 
@@ -483,6 +487,11 @@ class DBConnector
                 $results = DBConnector::usersearchstudent($studentyear,$fname,$lname,$dob,$email);
             }
             elseif($acctype=="Faculty"){
+                error_log($facultyrank, 0);
+                error_log($fname, 0);
+                error_log($lname, 0);
+                error_log($dob, 0);
+                error_log($email, 0);
                 $results = DBConnector::usersearchfaculty($facultyrank,$fname,$lname,$dob,$email);
             }
             else{
@@ -505,21 +514,22 @@ class DBConnector
             debug_zval_dump($allVars);
         }
     }
-
-    public static function createUser($User)
+    
+    public static function createUser($data)
     {
-        try {
-            /*Get information from the search (post) request*/
-            $acctype = $User->GetAccType();
-            $password = hash(Constants::$PASSWORD_HASH, $User->GetPassword()); //convert password to 80 byte hash using ripemd256 before saving
-            $fname = $User->GetFName();
-            $lname = $User->GetLName();
-            $dob = $User->GetDOB(); //is already UTC
-            $email = $User->GetEmail();
-            $studentyear = $User->GetYear(); //only if student, ensure null otherwise (must be a number)
-            $facultyrank = $User->GetRank(); //only if faculty, ensure null otherwise
-            $squestion = $User->GetSQuestion();
-            $sanswer = $User->GetSAnswer();
+        try 
+        {
+            /*Get information from the search request*/
+            $email = $data[0];
+            $password = hash(Constants::$PASSWORD_HASH, $data[1]); //convert password to 80 byte hash using ripemd256 before saving
+            $acctype = $data[2];
+            $fname = $data[3];
+            $lname = $data[4];
+            $dob = $data[5]; //is already UTC
+            $studentyear = $data[6]; //only if student, ensure null otherwise (must be a number)
+            $facultyrank = $data[7]; //only if faculty, ensure null otherwise
+            $squestion = $data[8];
+            $sanswer = $data[9];
         
             /*Check for a valid UserID to use. Assumes Users count in order*/
             $rows = $GLOBALS['db']->query("SELECT COUNT(*) as count FROM User");

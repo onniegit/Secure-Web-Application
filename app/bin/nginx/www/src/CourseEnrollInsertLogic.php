@@ -8,10 +8,14 @@ try{
 
     /*Get information from the search (post) request*/
     $courseid = $_POST['courseid'];
-    $email = strtolower(SessionController::GetEmail());
+    
+    if (SecurityTemplate::IsSetSessionEmail(null)) //check that session exists and is nonempty
+        $email = "empty";
+    else
+        $email = strtolower($_SESSION['email']);
 
     if($courseid==null)
-    {throw new Exception("input did not exist");}
+        throw new Exception("input did not exist");
 
     /*Obtain UserID from db*/
     $query = "SELECT UserID FROM User WHERE Email = '$email'";

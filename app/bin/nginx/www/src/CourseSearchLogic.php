@@ -4,34 +4,36 @@ require_once "DBConnector.php";
 try {
 
     global $jsonArray;
-    $CSInfo = new CSInfo(); //create course object
 
     //if previous search in CourseSearchControl.php found some data
     if (isset($_COOKIE['courseid']) && $_COOKIE['courseid'] != "-1") {
 
+        /*Get information from the cookie*/
+
         if(isset($_COOKIE['courseid']) && $_COOKIE['courseid'] != " ")
-            $CSInfo->SetCourseId($_COOKIE['courseid']);
+            $CourseId = $_COOKIE['courseid']; 
         else
-            $CSInfo->SetCourseId("defaultvalue!");
+            $CourseId = "defaultvalue!";
 
         if(isset($_COOKIE['coursename']) && $_COOKIE['coursename'] != " ")
-            $CSInfo->SetCourseName($_COOKIE['coursename']);
+            $CourseName = $_COOKIE['coursename'];
         else
-            $CSInfo->SetCourseName("defaultvalue!");
+            $CourseName = "defaultvalue!";
         
-        
+    
         if(isset($_COOKIE['semester']) && $_COOKIE['semester'] != " ")
-            $CSInfo->SetSemester($_COOKIE['semester']);
+            $Semester = $_COOKIE['semester'];
         else
-            $CSInfo->SetSemester("defaultvalue!");
+            $Semester = "defaultvalue!";
         
         if(isset($_COOKIE['department']) && $_COOKIE['department'] != " ")
-            $CSInfo->SetDepartment($_COOKIE['department']);
+            $Department = $_COOKIE['department'];
         else
-            $CSInfo->SetDepartment("defaultvalue!");
+            $Department = "defaultvalue!";
         
+        $data = array(Constants::$COURSE_SEARCH_TYPE,$CourseId, $CourseName, $Semester, $Department);
 
-        $results = DBConnector::searchCourse($CSInfo); //search course 
+        $results = DBConnector::searchCourse($data); //search course 
 
         while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
             $jsonArray[] = $row;

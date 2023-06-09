@@ -1,8 +1,12 @@
 <?php
-try {
+try 
+{
     require_once "../src/LoginController.php";
+    require_once "../src/Constants.php";
 
-    LoginController::Login($_POST['username'],$_POST['password']);
+    //create array for input
+    $credentials = array($_POST['username'], $_POST['password']);
+    LoginController::Login($credentials);
 }
 catch(Exception $e)
 {

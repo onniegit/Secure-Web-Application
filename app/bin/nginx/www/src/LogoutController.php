@@ -1,17 +1,25 @@
 <?php
-require_once "RequestController.php";
-require_once "SessionController.php";
+require_once "SecurityTemplate.php";
 
-class LogoutController extends RequestController
+class LogoutController extends SecurityTemplate
 {
-    static function Logout()
+    public static function Logout()
     {
-        if (SessionController::authenticateSession()) {
-            SessionController::closeSession();
-        }
+        $sec_result = self::SecurityCheck(array(null, null), null, null, null);
+        
+        //error_log($sec_result, 0);
+        self::closeSession();
 
-        //launch login form
-        header("Location: ../public/LoginForm.php");    }
+        if ($sec_result === true)
+            header("Location: ../public/LoginForm.php"); //launch login form
+        else
+            header("Location: ../public/LoginForm.php?login=fail"); //launch login form w/ error msg
+    }
+
+    public static function closeSession()
+    {
+        session_destroy(); //clear all session variables
+    }
 }
 
 ?>
